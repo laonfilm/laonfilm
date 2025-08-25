@@ -1,0 +1,27 @@
+---
+import Base from "../layouts/Base.astro";
+import { getCollection } from "astro:content";
+
+// Pre-generate all slugs
+export async function getStaticPaths() {
+  const posts = await getCollection("posts");
+  return posts.map((p) => ({
+    params: { slug: p.slug },
+    props: { entry: p },
+  }));
+}
+
+// Receive the entry and prepare its rendered MD component
+const { entry } = Astro.props;
+const { title, hero, tags = [], date } = entry.data;
+const { Content } = await entry.render();
+---
+<Base title={`${title} · LAonFilm`}>
+  <article>
+    <img class="hero" src={hero} alt={title} />
+    <h1>{title}</h1>
+    <p><small>{new Date(date).toLocaleDateString()}</small></p>
+    <p class="tags">{tags.map((t)=> <span class="tag">{t}</span>)}</p>
+    <Content />
+  </article>
+</Base>
