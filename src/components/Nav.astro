@@ -1,0 +1,92 @@
+---
+const siteTitle = "LAonFilm";
+const tagline = "a love letter to Los Angeles";
+---
+<nav class="nav">
+  <div class="brandline">
+    <a href="/" class="brand" aria-label="LAonFilm home">
+      <img src="/images/LAonFilm.png" alt="LAonFilm logo" class="logo" />
+      <span class="title">{siteTitle}</span>
+    </a>
+    <span class="separator">–</span>
+    <span class="tagline">{tagline}</span>
+  </div>
+
+  <ul class="links">
+    <li><a href="/tagged/food">Food</a></li>
+    <li><a href="/tagged/drink">Drink</a></li>
+    <li><a href="/tagged/culture">Culture</a></li>
+    <li><a href="/tagged/views">Views</a></li>
+    <li><a href="/tagged/dispatches">Dispatches</a></li>
+    <li><a href="/search">Search</a></li>
+  </ul>
+</nav>
+
+<style>
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px dashed var(--text);
+  flex-wrap: wrap;
+  column-gap: 1rem; /* breathing room when wrapping */
+}
+
+/* Left cluster: logo + title + – + tagline */
+.brandline {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-right: 1rem;      /* keep some space before the nav buttons */
+  flex: 1 1 auto;          /* take available space; pushes links right */
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  text-decoration: none;   /* brand itself not underlined */
+  color: var(--text);
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.logo {
+  height: 28px;
+  width: auto;
+  margin-right: 0.4rem;
+}
+
+.separator { opacity: 0.6; }
+
+.tagline {
+  font-size: 0.95rem;
+  color: var(--text);
+  opacity: 0.75;
+  font-style: italic;
+  letter-spacing: .3px;
+  margin-left: .1rem;
+}
+
+/* Right cluster: nav links */
+.links {
+  display: flex;
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-shrink: 0;          /* don't let links squish */
+}
+
+/* IMPORTANT: don't kill the global underline style */
+.links a {
+  color: inherit;          /* keep site color; underline comes from global CSS */
+}
+
+/* Small screens: hide tagline to prevent crowding */
+@media (max-width: 560px) {
+  .tagline { display: none; }
+  .logo { height: 24px; }
+}
+</style>

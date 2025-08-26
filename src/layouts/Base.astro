@@ -1,0 +1,43 @@
+---
+import Nav from "../components/Nav.astro";
+const { title = "LAonFilm", description = "LAonFilm — a love letter to Los Angeles" } = Astro.props;
+const pageTitle = title;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+
+    <!-- Global CSS -->
+    <link rel="stylesheet" href="/styles/base.css" />
+
+    <!-- Icons (prevents favicon warnings) -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+    <meta name="description" content={description} />
+  </head>
+  <body>
+    <header class="site-header">
+      <Nav />
+    </header>
+
+    <main class="container">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p>© {new Date().getFullYear()} LAonFilm · Shot on Hasselblad 500CM + HassyPB ·
+          <a href="/subscribe">Subscribe</a> · <a href="/search">Search</a>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

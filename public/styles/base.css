@@ -1,0 +1,134 @@
+/* =========================
+   LAonFilm base styles
+   ========================= */
+
+:root{
+  /* Retro 70s palette from your style guide */
+  --bg:     #EBD7A3;  /* background */
+  --text:   #2A2A2A;  /* body text */
+  --head:   #6B4226;  /* headings */
+  --link:   #B7410E;  /* links / accent (force to accent) */
+  --link-h: #CC5500;  /* link hover */
+  --accent: #B7410E;  /* strong accent (used as bold-ish color) */
+  --accent-2:#556B2F; /* alt accent */
+
+  --container: 1120px;
+  --space-1: .25rem;
+  --space-2: .5rem;
+  --space-3: .75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --radius: 6px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body{
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Special Elite", "Courier New", Courier, monospace;
+  line-height: 1.5;
+  font-size: 17px;
+  display: grid;
+  grid-template-rows: auto 1fr auto; /* header, main, footer */
+  min-height: 100svh;
+}
+
+/* Typography */
+h1,h2,h3 {
+  color: var(--head);
+  margin: 0 0 var(--space-4);
+}
+p { margin: 0 0 var(--space-4); }
+strong, b { color: var(--accent); font-weight: 700; }
+
+/* Links = accent color + underline */
+a {
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+a:hover { color: var(--link-h); }
+
+/* Layout wrappers */
+.site-header{
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px dashed rgba(0,0,0,.1);
+}
+
+.nav{
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: var(--space-4);
+  display: flex;
+  gap: var(--space-4);
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.brand{
+  font-size: 1.4rem;
+  letter-spacing: .5px;
+  text-decoration: none; /* brand link not underlined */
+  color: var(--head);
+}
+
+.nav-right{
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.nav-right a{
+  text-decoration: underline;
+}
+
+.tagline{
+  color: var(--text);
+  opacity: .7;
+  font-size: .95rem;
+  white-space: nowrap;
+}
+
+.container{
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-4);
+}
+
+/* Grid of hero Polaroids on homepage (image only, slight tilt) */
+.grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
+  gap: var(--space-6);
+}
+
+.card{
+  display: block;
+  text-decoration: none;
+  transform: rotate(calc(var(--twist, 0) * 1deg));
+  transition: transform .15s ease;
+  will-change: transform;
+}
+.card:focus-visible { outline: 2px dashed var(--link); outline-offset: 3px; }
+
+.card img{
+  width: 100%;
+  height: auto;
+  display: block;
+  /* soft shadow to float the scan a bit */
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,.15));
+}

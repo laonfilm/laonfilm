@@ -16,12 +16,19 @@ const { entry } = Astro.props;
 const { title, hero, tags = [], date } = entry.data;
 const { Content } = await entry.render();
 ---
+
 <Base title={`${title} · LAonFilm`}>
   <article>
-    <img class="hero" src={hero} alt={title} />
+    {hero && <img class="hero" src={hero} alt={title} />}
     <h1>{title}</h1>
-    <p><small>{new Date(date).toLocaleDateString()}</small></p>
-    <p class="tags">{tags.map((t)=> <span class="tag">{t}</span>)}</p>
+    {date && (
+      <p><small>{new Date(date).toLocaleDateString()}</small></p>
+    )}
+    {tags.length > 0 && (
+      <p class="tags">
+        {tags.map((t) => <span class="tag">{t}</span>)}
+      </p>
+    )}
     <Content />
   </article>
 </Base>

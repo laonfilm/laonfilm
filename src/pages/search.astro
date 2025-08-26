@@ -1,0 +1,42 @@
+---
+const q = Astro.url.searchParams.get('q') ?? '';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Search — LAonFilm</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/styles/base.css" />
+  </head>
+  <body>
+    <main class="container" style="max-width: 720px;">
+      <h1 style="margin-bottom: 1rem;">Search</h1>
+
+      <form action="/search" method="get" style="display:flex; gap:.5rem;">
+        <input
+          type="text"
+          name="q"
+          value={q}
+          placeholder="Type and press Enter"
+          style="flex:1; padding:.5rem .75rem; border:1px dashed rgba(0,0,0,.3); background:transparent; font: inherit;"
+        />
+        <button
+          type="submit"
+          style="border:1px dashed rgba(0,0,0,.3); background:transparent; padding:.5rem .75rem; cursor:pointer; font: inherit;"
+        >
+          Go
+        </button>
+      </form>
+
+      {q && (
+        <p style="margin-top:1rem; opacity:.8;">
+          Showing results for: <strong>{q}</strong>
+        </p>
+      )}
+
+      <!-- Placeholder until wired to a real search index -->
+      <p style="margin-top:2rem; opacity:.7;">(Search results TBD)</p>
+    </main>
+  </body>
+</html>

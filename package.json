@@ -8,7 +8,11 @@
     "preview": "astro preview",
     "astro": "astro"
   },
-  "dependencies": {
-    "astro": "^5.13.3"
+  "devDependencies": {
+    "@astrojs/mdx": "^4.3.4",
+    "@resvg/resvg-js": "^2.6.2",
+    "astro": "^5.13.3",
+    "minisearch": "^7.1.2",
+    "satori": "^0.16.2"
   }
 }
