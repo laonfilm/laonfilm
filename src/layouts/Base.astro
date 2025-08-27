@@ -31,13 +31,23 @@ const pageTitle = title;
     <main class="container">
       <slot />
     </main>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-left">
+      <p>
+        © {new Date().getFullYear()} LAonFilm · Shot on Hasselblad 500CM + HassyPB ·
+        <a href="/about">About</a>
+      </p>
+    </div>
 
-    <footer class="site-footer">
-      <div class="footer-inner">
-        <p>© {new Date().getFullYear()} LAonFilm · Shot on Hasselblad 500CM + HassyPB ·
-          <a href="/subscribe">Subscribe</a> · <a href="/search">Search</a>
-        </p>
-      </div>
-    </footer>
+    <div class="footer-right" aria-label="Social and feeds">
+      <a href="https://instagram.com/laonfilm_" target="_blank" rel="me noopener">[IG]</a>
+      <a href="https://youtube.com/@laonfilm" target="_blank" rel="me noopener">[YT]</a>
+      <a href="https://tiktok.com/@laonfilm" target="_blank" rel="me noopener">[TT]</a>
+      <a href="mailto:hi@laonfilm.com">[EMAIL]</a>
+      <a href="/rss.xml">[RSS]</a>
+    </div>
+  </div>
+</footer>
   </body>
 </html>

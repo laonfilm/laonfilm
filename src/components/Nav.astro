@@ -3,6 +3,7 @@ const siteTitle = "LAonFilm";
 const tagline = "a love letter to Los Angeles";
 ---
 <nav class="nav">
+  <!-- Left: logo + title + – + tagline -->
   <div class="brandline">
     <a href="/" class="brand" aria-label="LAonFilm home">
       <img src="/images/LAonFilm.png" alt="LAonFilm logo" class="logo" />
@@ -12,6 +13,11 @@ const tagline = "a love letter to Los Angeles";
     <span class="tagline">{tagline}</span>
   </div>
 
+  <!-- Right: hamburger (typewriter vibe) -->
+  <input id="menu-toggle" type="checkbox" class="menu-toggle" aria-hidden="true" />
+  <label for="menu-toggle" class="menu-btn" aria-label="Toggle menu">&&&</label>
+
+  <!-- Nav links -->
   <ul class="links">
     <li><a href="/tagged/food">Food</a></li>
     <li><a href="/tagged/drink">Drink</a></li>
@@ -23,37 +29,38 @@ const tagline = "a love letter to Los Angeles";
 </nav>
 
 <style>
+/* ====== Bar container ====== */
 .nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0.75rem 1rem;
-  border-bottom: 1px dashed var(--text);
-  flex-wrap: wrap;
-  column-gap: 1rem; /* breathing room when wrapping */
+  border-bottom: 1px dashed var(--text); /* full-width rule */
+  column-gap: 1rem;
 }
 
-/* Left cluster: logo + title + – + tagline */
+/* ====== Left cluster: brand + tagline ====== */
 .brandline {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  flex-wrap: wrap;
-  margin-right: 1rem;      /* keep some space before the nav buttons */
-  flex: 1 1 auto;          /* take available space; pushes links right */
+  flex: 1 1 auto; /* lets the brand push links / burger to the right */
+  min-width: 0;
 }
 
 .brand {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  text-decoration: none;   /* brand itself not underlined */
+  text-decoration: none;     /* brand link not underlined */
   color: var(--text);
-  font-weight: bold;
-  font-size: 1.2rem;
+  font-weight: 700;
+  font-size: 1.35rem;
+  letter-spacing: .5px;
+  white-space: nowrap;
 }
 
 .logo {
-  height: 28px;
+  height: 36px;              /* bigger logo across views */
   width: auto;
   margin-right: 0.4rem;
 }
@@ -64,29 +71,59 @@ const tagline = "a love letter to Los Angeles";
   font-size: 0.95rem;
   color: var(--text);
   opacity: 0.75;
-  font-style: italic;
   letter-spacing: .3px;
   margin-left: .1rem;
+  white-space: nowrap;
 }
 
-/* Right cluster: nav links */
+/* ====== Right cluster: links + hamburger ====== */
 .links {
   display: flex;
   gap: 1rem;
   list-style: none;
   margin: 0;
   padding: 0;
-  flex-shrink: 0;          /* don't let links squish */
+  align-items: center;
+  flex-shrink: 0;
 }
 
-/* IMPORTANT: don't kill the global underline style */
-.links a {
-  color: inherit;          /* keep site color; underline comes from global CSS */
+/* Header link visuals are unified in base.css:
+   - no underline by default; underline + accent on hover */
+
+/* Hamburger (checkbox hack) */
+.menu-toggle { display: none; } /* hidden input */
+
+.menu-btn {
+  display: none; /* visible only on small screens */
+  font-family: "Special Elite","Courier New",Courier,monospace;
+  font-size: 1.25rem;
+  cursor: pointer;
+  user-select: none;
+  padding: .25rem .5rem;
+  line-height: 1;
 }
 
-/* Small screens: hide tagline to prevent crowding */
-@media (max-width: 560px) {
-  .tagline { display: none; }
-  .logo { height: 24px; }
+/* ====== Mobile behavior ====== */
+@media (max-width: 720px) {
+  .tagline { display: none; }      /* keep bar tidy on phones */
+  .logo { height: 32px; }          /* still larger than before */
+
+  /* Show the hamburger on the right of the top bar */
+  .menu-btn { display: inline-block; }
+
+  /* Collapse links by default */
+  .links {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: .5rem;
+    margin-top: .5rem;
+    padding-top: .5rem;
+    border-top: 1px dashed var(--text);
+  }
+
+  /* When toggled, reveal links below the bar */
+  .menu-toggle:checked ~ .links { display: flex; }
 }
 </style>
