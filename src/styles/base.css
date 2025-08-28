@@ -7,9 +7,9 @@
   --bg:     #EBD7A3;  /* background */
   --text:   #2A2A2A;  /* body text */
   --head:   #6B4226;  /* headings */
-  --link:   #B7410E;  /* links / accent (force to accent) */
+  --link:   #B7410E;  /* links / accent */
   --link-h: #CC5500;  /* link hover */
-  --accent: #B7410E;  /* strong accent (used as bold-ish color) */
+  --accent: #B7410E;  /* strong accent */
   --accent-2:#556B2F; /* alt accent */
 
   --container: 1120px;
@@ -44,7 +44,7 @@ body{
 
 /* Typography */
 h1,h2,h3 {
-  color: var(--head);
+  color: var(--text);
   margin: 0 0 var(--space-4);
 }
 p { margin: 0 0 var(--space-4); }
@@ -59,13 +59,12 @@ a {
 }
 a:hover { color: var(--link-h); }
 
-/* Layout wrappers */
+/* ===== Layout wrappers ===== */
 .site-header{
-  position: sticky;
+  position: static;
   top: 0;
-  z-index: 10;
   background: var(--bg);
-  border-bottom: 1px dashed var(--text); /* full-width, visible rule */
+  border-bottom: 1px dashed var(--text);
 }
 
 .nav{
@@ -86,6 +85,7 @@ a:hover { color: var(--link-h); }
   color: var(--head);
 }
 
+/* (Kept if you use .nav-right elsewhere) */
 .nav-right{
   display: flex;
   align-items: baseline;
@@ -93,17 +93,18 @@ a:hover { color: var(--link-h); }
   flex-wrap: wrap;
 }
 
-/* Header nav links — unified behavior (match footer) */
-.nav-right a {
-  text-decoration: none;
+/* ===== Header nav links (match footer behavior) =====
+   Your <ul> class is "links" in Nav.astro. */
+.nav .links a {
+  text-decoration: none;       /* quiet by default */
   color: var(--text);
   opacity: 0.85;
   transition: color 0.2s ease, opacity 0.2s ease, text-decoration 0.2s ease;
 }
-.nav-right a:hover {
+.nav .links a:hover {
   color: var(--accent);
   opacity: 1;
-  text-decoration: underline;
+  text-decoration: underline;  /* underline on hover only */
 }
 
 .tagline{
@@ -119,11 +120,19 @@ a:hover { color: var(--link-h); }
   padding: var(--space-8) var(--space-4);
 }
 
-/* Grid of hero Polaroids on homepage (image only, slight tilt) */
+/* ===== Homepage grid (image-only, slight tilt) ===== */
 .grid{
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
   gap: var(--space-6);
+}
+
+/* Mobile: 2 columns instead of 1 */
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4); /* slightly smaller gap on mobile */
+  }
 }
 
 .card{
@@ -141,6 +150,56 @@ a:hover { color: var(--link-h); }
   display: block;
   /* soft shadow to float the scan a bit */
   filter: drop-shadow(0 2px 6px rgba(0,0,0,.15));
+}
+
+/* Varied rotation angles for natural Instax scatter */
+.card:nth-child(1) { --twist: -2; }
+.card:nth-child(2) { --twist: 1.5; }
+.card:nth-child(3) { --twist: -1; }
+.card:nth-child(4) { --twist: 2.5; }
+.card:nth-child(5) { --twist: -1.5; }
+.card:nth-child(6) { --twist: 0.5; }
+.card:nth-child(7) { --twist: -2.5; }
+.card:nth-child(8) { --twist: 1; }
+.card:nth-child(9) { --twist: -0.5; }
+.card:nth-child(10) { --twist: 2; }
+.card:nth-child(11) { --twist: -1.5; }
+.card:nth-child(12) { --twist: 1.5; }
+
+/* Continue the pattern for more cards */
+.card:nth-child(n+13) {
+  --twist: calc((13 - var(--i, 13)) * 0.3); /* Subtle variation for additional cards */
+}
+
+/* Content area links - typewriter style (no hover effects) */
+.container a,
+article a,
+main a {
+  color: var(--accent) !important;      /* Always red */
+  text-decoration: underline !important; /* Always underlined */
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  font-weight: 600;                      /* Slightly bolder for typewriter feel */
+  transition: none !important;          /* No hover transitions */
+}
+
+/* Remove any hover effects from content links */
+.container a:hover,
+article a:hover,
+main a:hover {
+  color: var(--accent) !important;      /* Stay the same color */
+  text-decoration: underline !important; /* Keep underline */
+  opacity: 1 !important;                /* No opacity changes */
+}
+
+/*-------- Typewriter-styled Divider ------- */
+.typewriter-divider {
+  text-align: center;
+  font-family: "Special Elite", "Courier New", Courier, monospace;
+  font-size: 1rem;
+  letter-spacing: 0.2em; /* space out the dashes a bit */
+  opacity: 0.7;
+  margin: 2rem 0;
 }
 
 /* ---------------- Footer ---------------- */
@@ -164,23 +223,23 @@ a:hover { color: var(--link-h); }
   color: var(--text);
 }
 
-/* Footer About + Social links — unified behavior */
-.footer-left a,
-.footer-right a {
+/* Footer About + Social links — override global link color */
+.site-footer .footer-left a,
+.site-footer .footer-right a {
   text-decoration: none;
-  color: var(--text);
+  color: var(--text);      /* keep charcoal, not accent */
   opacity: 0.8;
   transition: color 0.2s ease, opacity 0.2s ease, text-decoration 0.2s ease;
 }
-.footer-left a:hover,
-.footer-right a:hover {
-  color: var(--accent);
+.site-footer .footer-left a:hover,
+.site-footer .footer-right a:hover {
+  color: var(--accent);    /* accent only on hover */
   opacity: 1;
   text-decoration: underline;
 }
 
 .footer-right {
   display: flex;
-  gap: 0.75rem; /* spacing between [IG] [YT] [TT] */
+  gap: 0.75rem;            /* spacing between [IG] [YT] [TT] */
   font-size: 0.95rem;
 }

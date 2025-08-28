@@ -1,34 +1,563 @@
 ---
-import Base from "../layouts/Base.astro";
+import Site from "../layouts/Site.astro";
 import { getCollection } from "astro:content";
 
-// Pre-generate all slugs
+// Generate all possible slugs for static generation
 export async function getStaticPaths() {
   const posts = await getCollection("posts");
-  return posts.map((p) => ({
-    params: { slug: p.slug },
-    props: { entry: p },
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
   }));
 }
 
-// Receive the entry and prepare its rendered MD component
-const { entry } = Astro.props;
-const { title, hero, tags = [], date } = entry.data;
-const { Content } = await entry.render();
+// Get the current post
+const { post } = Astro.props;
+const { title, date, categories, image, location } = post.data;
+const { Content } = await post.render();
 ---
 
-<Base title={`${title} · LAonFilm`}>
-  <article>
-    {hero && <img class="hero" src={hero} alt={title} />}
-    <h1>{title}</h1>
-    {date && (
-      <p><small>{new Date(date).toLocaleDateString()}</small></p>
-    )}
-    {tags.length > 0 && (
-      <p class="tags">
-        {tags.map((t) => <span class="tag">{t}</span>)}
-      </p>
-    )}
-    <Content />
+<Site title={title}>
+  <article class="post-container">
+    
+    <!-- Hero Image Section -->
+    <div class="hero-section">
+      <img id="hero-image" src={image} alt={title} class="hero-image" />
+    </div>
+    
+    <!-- Additional Images Gallery -->
+    <div class="gallery-thumbnails">
+      <!-- Example thumbnails - you'll add these when you have multiple images -->
+      <!--
+      <img src="/images/test-spot-1-2.jpg" alt="" class="thumbnail" onclick="swapHeroImage(this.src)" />
+      <img src="/images/test-spot-1-3.jpg" alt="" class="thumbnail" onclick="swapHeroImage(this.src)" />
+      <div class="video-thumbnail" onclick="playVideo('/path/to/video.mp4')">
+        <div class="play-button">▶</div>
+      </div>
+      -->
+    </div>
+
+    <!-- Info and Share Section -->
+    <div class="info-share-container">
+      <!-- Info Box -->
+      <div class="info-box">
+        <h3 class="box-title">INFO</h3>
+        <div class="catalog-row">
+          <span class="catalog-label">DATE:</span>
+          <span class="catalog-value">{new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+        </div>
+
+        {categories && categories.length > 0 && (
+          <div class="catalog-row">
+            <span class="catalog-label">REF:</span>
+            <span class="catalog-value">
+              <span set:html={categories.map(category => 
+                `<a href="/tagged/${category.toLowerCase()}">${category}</a>`
+              ).join(' · ')} />
+            </span>
+          </div>
+        )}
+        
+        {location && (
+          <div class="catalog-row">
+            <span class="catalog-label">LOC:</span>
+            <div class="catalog-location">
+              <div>{location}</div>
+            </div>
+          </div>
+        )}
+
+        <div class="catalog-row">
+          <span class="catalog-label">MAP:</span>
+          <span class="catalog-value">
+            <a href={`https://maps.google.com/?q=${encodeURIComponent(location)}`} target="_blank">Google</a> · 
+            <a href={`https://maps.apple.com/?q=${encodeURIComponent(location)}`} target="_blank">Apple</a>
+          </span>
+        </div>
+
+        <!-- Website field -->
+        <div class="catalog-row">
+          <span class="catalog-label">WEB:</span>
+          <span class="catalog-value">
+            <!-- Add website when available -->
+            <!-- <a href="https://example.com" target="_blank">example.com</a> -->
+          </span>
+        </div>
+      </div>
+
+      <!-- Share Box -->
+      <div class="share-box">
+        <h3 class="box-title">SHARE</h3>
+        <div class="share-stamps-grid">
+          <div class="stamp instagram small stamp-1" onclick="shareToInstagram()">
+            <span class="stamp-text">INSTAGRAM</span>
+          </div>
+          <div class="stamp tiktok large stamp-2" onclick="shareToTikTok()">
+            <span class="stamp-text">TIKTOK</span>
+          </div>
+          <div class="stamp youtube medium stamp-3" onclick="shareToYouTube()">
+            <span class="stamp-text">YOUTUBE</span>
+          </div>
+          <div class="stamp twitter small stamp-4" onclick="shareToTwitter()">
+            <span class="stamp-text-large">X</span>
+          </div>
+          <div class="stamp reddit medium stamp-5" onclick="shareToReddit()">
+            <span class="stamp-text">REDDIT</span>
+          </div>
+          <div class="stamp email small stamp-6" onclick="shareViaEmail()">
+            <span class="stamp-text">EMAIL</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Post Content -->
+    <div class="post-content">
+      <Content />
+    </div>
   </article>
-</Base>
+</Site>
+
+<style>
+  .post-container {
+    max-width: 720px;
+    margin: 0 auto;
+    position: relative;
+    padding: 1rem;
+  }
+
+  /* Hero Image */
+  .hero-section {
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .hero-image {
+    max-width: 385px;
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
+  }
+
+  /* Gallery Thumbnails */
+  .gallery-thumbnails {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .thumbnail {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    cursor: pointer;
+    border: 6px solid white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: transform 0.2s ease;
+    transform: rotate(var(--thumb-twist, 0deg));
+  }
+
+  .thumbnail:nth-child(1) { --thumb-twist: -3deg; }
+  .thumbnail:nth-child(2) { --thumb-twist: 2deg; }
+  .thumbnail:nth-child(3) { --thumb-twist: -1deg; }
+  .thumbnail:nth-child(4) { --thumb-twist: 2.5deg; }
+  .thumbnail:nth-child(5) { --thumb-twist: -2deg; }
+
+  .thumbnail:hover {
+    transform: rotate(0deg) scale(1.1);
+  }
+
+  .video-thumbnail {
+    width: 80px;
+    height: 80px;
+    background: #f0f0f0;
+    border: 6px solid white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    transform: rotate(var(--thumb-twist, 1deg));
+  }
+
+  .video-thumbnail:hover {
+    transform: rotate(0deg) scale(1.1);
+  }
+
+  .play-button {
+    font-size: 1.5rem;
+    color: var(--accent);
+  }
+
+  /* Info and Share Container - Side by Side with equal heights */
+  .info-share-container {
+    display: flex;
+    gap: 1.5rem;
+    margin: 2rem 0;
+    align-items: stretch;
+  }
+
+  /* Info Box - Takes up more space */
+  .info-box {
+    flex: 2;
+    background: var(--bg);
+    padding: 1.5rem;
+    font-family: "Special Elite", monospace;
+    border: 2px solid rgba(42,42,42,0.7);
+    border-top-width: 3px;
+    border-right-width: 1px;
+    border-bottom-width: 2px;
+    border-left-width: 3px;
+    border-radius: 2px 0px 3px 1px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Share Box - Different stamped look */
+  .share-box {
+    flex: 1;
+    background: var(--bg);
+    padding: 1.5rem;
+    font-family: "Special Elite", monospace;
+    border: 3px solid rgba(42,42,42,0.5);
+    border-left-width: 1px;
+    border-top-width: 1px;
+    border-right-width: 4px;
+    border-bottom-width: 4px;
+    border-radius: 0px 4px 1px 0px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .box-title {
+    font-family: "Special Elite", monospace;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--text);
+    margin: 0 0 1rem 0;
+    text-align: center;
+    letter-spacing: 1px;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+  }
+
+  /* Info box content */
+  .catalog-row {
+    display: flex;
+    margin-bottom: 0.6rem;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  .catalog-row:last-child {
+    margin-bottom: 0;
+  }
+
+  .catalog-label {
+    font-weight: normal;
+    min-width: 3.5rem;
+    flex-shrink: 0;
+    font-size: 1rem;
+  }
+
+  .catalog-value {
+    flex: 1;
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+
+  .catalog-value a {
+    text-decoration: underline !important;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+    color: var(--accent) !important;
+    font-weight: 600;
+    transition: none !important;
+  }
+
+  .catalog-value a:hover {
+    color: var(--accent) !important;
+    text-decoration: underline !important;
+  }
+
+  .catalog-location {
+    flex: 1;
+    font-size: 1rem;
+  }
+
+  .map-links {
+    margin-top: 0.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .map-links a {
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  /* Share stamps - 2x3 grid for 6 stamps */
+  .share-stamps-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    justify-items: center;
+    flex: 1;
+    align-content: center;
+  }
+
+  /* Base stamp styles */
+  .stamp {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Special Elite", monospace;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    position: relative;
+    background: var(--bg);
+    border: 3px solid;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 1;
+  }
+
+  /* Different sizes - made smaller */
+  .stamp.small {
+    width: 50px;
+    height: 50px;
+    font-size: 0.55rem;
+  }
+
+  .stamp.medium {
+    width: 58px;
+    height: 58px;
+    font-size: 0.6rem;
+  }
+
+  .stamp.large {
+    width: 65px;
+    height: 65px;
+    font-size: 0.65rem;
+  }
+
+  /* Organic positioning - each stamp slightly different */
+  .stamp-1 { transform: rotate(8deg) translateY(-2px) translateX(3px); }
+  .stamp-2 { transform: rotate(-5deg) translateY(4px) translateX(-2px); }
+  .stamp-3 { transform: rotate(12deg) translateY(-1px) translateX(1px); }
+  .stamp-4 { transform: rotate(-8deg) translateY(2px) translateX(-3px); }
+  .stamp-5 { transform: rotate(6deg) translateY(-3px) translateX(2px); }
+  .stamp-6 { transform: rotate(-3deg) translateY(1px) translateX(1px); }
+
+  .stamp-text {
+    transform: rotate(var(--text-rotation, -25deg));
+    letter-spacing: 0.3px;
+  }
+
+  /* Large text for X - made smaller */
+  .stamp-text-large {
+    font-size: 1.1rem;
+    font-weight: 900;
+    transform: rotate(-15deg);
+  }
+
+  /* Hand-drawn circle imperfections */
+  .stamp::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border: 2px solid inherit;
+    border-radius: 50%;
+    opacity: 0.6;
+    transform: rotate(1deg) scale(1.02);
+  }
+
+  .stamp::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border: 1px solid inherit;
+    border-radius: 50%;
+    opacity: 0.3;
+    transform: rotate(-0.5deg) scale(1.05);
+  }
+
+  /* Individual stamp colors - with vintage green and gray */
+  .stamp.instagram {
+    --text-rotation: -15deg;
+    color: #E1306C;
+    border-color: #E1306C;
+  }
+
+  .stamp.tiktok {
+    --text-rotation: -35deg;
+    color: #6B8E3D;
+    border-color: #6B8E3D;
+  }
+
+  .stamp.youtube {
+    --text-rotation: -20deg;
+    color: #FF0000;
+    border-color: #FF0000;
+  }
+
+  .stamp.twitter {
+    color: #6C757D;
+    border-color: #6C757D;
+  }
+
+  .stamp.reddit {
+    --text-rotation: -30deg;
+    color: #FF4500;
+    border-color: #FF4500;
+  }
+
+  .stamp.email {
+    --text-rotation: -25deg;
+    color: #8B4513;
+    border-color: #8B4513;
+  }
+
+  .stamp:hover {
+    transform: scale(1.08) rotate(0deg) !important;
+  }
+
+  /* Post Content */
+  .post-content {
+    line-height: 1.7;
+    margin-top: 2rem;
+  }
+
+  .post-content p {
+    margin-bottom: 1.5rem;
+  }
+
+  /* Mobile adjustments - keep boxes side by side */
+  @media (max-width: 768px) {
+    .post-container {
+      padding: 0.5rem;
+    }
+
+    .hero-image {
+      max-width: 350px;
+    }
+
+    .info-share-container {
+      gap: 0.5rem;
+      margin: 1.5rem auto;
+      max-width: 100%;
+      justify-content: center;
+    }
+
+    .info-box {
+      flex: 2;
+      padding: 0.75rem;
+      min-width: 0;
+    }
+
+    .share-box {
+      flex: 1;
+      padding: 0.75rem;
+      min-width: 0;
+    }
+
+    .catalog-label {
+      font-size: 0.9rem;
+      min-width: 2.8rem;
+    }
+
+    .catalog-value {
+      font-size: 0.9rem;
+    }
+
+    .catalog-location {
+      font-size: 0.9rem;
+    }
+
+    .map-links a {
+      font-size: 0.9rem;
+    }
+
+    .stamp.small {
+      width: 40px;
+      height: 40px;
+      font-size: 0.5rem;
+    }
+
+    .stamp.medium {
+      width: 45px;
+      height: 45px;
+      font-size: 0.55rem;
+    }
+
+    .stamp.large {
+      width: 50px;
+      height: 50px;
+      font-size: 0.6rem;
+    }
+
+    .stamp-text-large {
+      font-size: 0.9rem;
+    }
+
+    .gallery-thumbnails {
+      gap: 0.75rem;
+    }
+
+    .thumbnail {
+      width: 60px;
+      height: 60px;
+      border: 4px solid white;
+    }
+
+    .share-stamps-grid {
+      gap: 4px;
+    }
+  }
+</style>
+
+<script>
+  function swapHeroImage(newSrc) {
+    document.getElementById('hero-image').src = newSrc;
+  }
+
+  function playVideo(videoSrc) {
+    console.log('Playing video:', videoSrc);
+  }
+
+  function shareToInstagram() {
+    navigator.clipboard.writeText(window.location.href);
+    alert('Link copied! Share on Instagram Stories or posts.');
+  }
+
+  function shareToTikTok() {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(document.title);
+    window.open(`https://www.tiktok.com/share?url=${url}&title=${text}`, '_blank');
+  }
+
+  function shareToYouTube() {
+    navigator.clipboard.writeText(window.location.href);
+    alert('Link copied! Share in YouTube community posts or comments.');
+  }
+
+  function shareToTwitter() {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(document.title + ' - LAonFilm');
+    window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+  }
+
+  function shareToReddit() {
+    const url = encodeURIComponent(window.location.href);
+    const text = encodeURIComponent(document.title + ' - LAonFilm');
+    window.open(`https://reddit.com/submit?url=${url}&title=${text}`, '_blank');
+  }
+</script>

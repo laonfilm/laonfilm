@@ -1,11 +1,12 @@
 ---
-import Base from "../layouts/Base.astro";
+import Site from "../layouts/Site.astro";
 import { getCollection } from "astro:content";
 
 const posts = (await getCollection("posts"))
-  .sort((a,b)=> new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
 ---
-<Base title="LAonFilm">
+
+<Site title="LAonFilm">
   <div class="grid">
     {posts.map((p) => (
       <a
@@ -14,36 +15,8 @@ const posts = (await getCollection("posts"))
         aria-label={p.data.title}
         title={p.data.title}
       >
-        <img src={p.data.hero} alt={p.data.title} loading="lazy" />
+        <img src={p.data.image} alt={p.data.title} loading="lazy" />
       </a>
     ))}
   </div>
-
-  <style>
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 12px;
-    }
-    /* clickable area that tilts like a loose print */
-    .card {
-      display: block;
-      padding: 0;
-      background: transparent;
-      border: none;
-      transform: rotate(-1.5deg);
-      transition: transform .15s ease-in-out;
-      outline: none;
-    }
-    .card:hover,
-    .card:focus {
-      transform: rotate(0deg);
-    }
-    /* image only — no fake frame, no fixed height */
-    .card img {
-      display: block;
-      width: 100%;
-      height: auto;
-    }
-  </style>
-</Base>
+</Site>

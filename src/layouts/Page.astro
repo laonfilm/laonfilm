@@ -1,0 +1,25 @@
+---
+// src/layouts/Page.astro
+import Site from "./Site.astro";
+const { title } = Astro.props;
+---
+
+<Site title={title}>
+  <article class="page-container">
+    <slot />
+  </article>
+</Site>
+
+<style>
+  .page-container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    .page-container {
+      padding: 1rem 0.5rem;
+    }
+  }
+</style>
