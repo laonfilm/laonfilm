@@ -19,11 +19,11 @@ This project is a handmade archive of LA’s spirit — past, present, and timel
 
 LAonFilm is influenced by storytellers and curators who have shared their love of this city in their own unique ways:  
 
-- **Huell Howser** – [California’s Gold archive](https://blogs.chapman.edu/huell-howser-archives/)  
-- **Alison Martino** – [@alisonmartino](https://www.instagram.com/alisonmartino) (Vintage Los Angeles)  
-- **Chris Nichols** – [@nixols](https://www.instagram.com/nixols) (LAMag.com)  
-- **Charles Phoenix** – [@_charlesphoenix](https://www.instagram.com/_charlesphoenix)  
-- **LA In A Minute** – [@lainaminute](https://www.instagram.com/lainaminute)  
+- Huell Howser – [California’s Gold archive](https://blogs.chapman.edu/huell-howser-archives/)  
+- Alison Martino – [@alisonmartino](https://www.instagram.com/alisonmartino) (Vintage Los Angeles)  
+- Chris Nichols – [@nixols](https://www.instagram.com/nixols) (LAMag.com)  
+- Charles Phoenix – [@_charlesphoenix](https://www.instagram.com/_charlesphoenix)  
+- LA In A Minute – [@lainaminute](https://www.instagram.com/lainaminute)  
 
 <div class="typewriter-divider">---</div>
 
