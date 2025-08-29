@@ -15,3 +15,72 @@
     </div>
   </div>
 </footer>
+
+<style>
+.site-footer {
+  border-top: 2px solid var(--text);
+  border-top-style: none;
+  padding: 1rem;
+  margin-top: 3rem;
+  position: relative;
+}
+
+/* Typewriter-style dashed rule at top */
+.site-footer::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 2px;
+  background-image: 
+    linear-gradient(90deg, 
+      var(--text) 0px, var(--text) 4px, 
+      transparent 4px, transparent 10px,
+      var(--text) 10px, var(--text) 13px,
+      transparent 13px, transparent 18px,
+      var(--text) 18px, var(--text) 22px,
+      transparent 22px, transparent 27px,
+      var(--text) 27px, var(--text) 30px,
+      transparent 30px, transparent 36px
+    );
+  background-size: 36px 2px;
+  background-repeat: repeat-x;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.footer-left p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+/* Footer About + Social links – override global link color */
+.site-footer .footer-left a,
+.site-footer .footer-right a {
+  text-decoration: none;
+  color: var(--text);      
+  opacity: 0.8;
+  transition: color 0.2s ease, opacity 0.2s ease, text-decoration 0.2s ease;
+}
+
+.site-footer .footer-left a:hover,
+.site-footer .footer-right a:hover {
+  color: var(--accent);    
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.footer-right {
+  display: flex;
+  gap: 0.75rem;            
+  font-size: 0.95rem;
+}
+</style>

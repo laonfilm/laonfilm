@@ -64,19 +64,8 @@ a:hover { color: var(--link-h); }
   position: static;
   top: 0;
   background: var(--bg);
-  border-bottom: 1px dashed var(--text);
 }
 
-.nav{
-  max-width: var(--container);
-  margin: 0 auto;
-  padding: var(--space-4);
-  display: flex;
-  gap: var(--space-4);
-  align-items: baseline;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
 
 .brand{
   font-size: 1.4rem;

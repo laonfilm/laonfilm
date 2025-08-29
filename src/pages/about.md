@@ -24,6 +24,7 @@ LAonFilm is influenced by storytellers and curators who have shared their love o
 - Chris Nichols – [@nixols](https://www.instagram.com/nixols) (LAMag.com)  
 - Charles Phoenix – [@_charlesphoenix](https://www.instagram.com/_charlesphoenix)  
 - LA In A Minute – [@lainaminute](https://www.instagram.com/lainaminute)  
+- Sissi Lu - [@sissilu](https://www.instagram.com/sissi_lu)
 
 <div class="typewriter-divider">---</div>
 

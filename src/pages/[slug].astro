@@ -43,8 +43,8 @@ const { Content } = await post.render();
       <div class="info-box">
         <h3 class="box-title">INFO</h3>
         <div class="catalog-row">
-          <span class="catalog-label">DATE:</span>
-          <span class="catalog-value">{new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+          <span class="catalog-label">NAM:</span>
+          <span class="catalog-value">{title}</span>
         </div>
 
         {categories && categories.length > 0 && (
@@ -70,19 +70,19 @@ const { Content } = await post.render();
         <div class="catalog-row">
           <span class="catalog-label">MAP:</span>
           <span class="catalog-value">
-            <a href={`https://maps.google.com/?q=${encodeURIComponent(location)}`} target="_blank">Google</a> · 
-            <a href={`https://maps.apple.com/?q=${encodeURIComponent(location)}`} target="_blank">Apple</a>
+            <a href={`https://maps.google.com/?q=${encodeURIComponent(location || '')}`} target="_blank">Google</a> · 
+            <a href={`https://maps.apple.com/?q=${encodeURIComponent(location || '')}`} target="_blank">Apple</a>
           </span>
         </div>
 
-        <!-- Website field -->
-        <div class="catalog-row">
-          <span class="catalog-label">WEB:</span>
-          <span class="catalog-value">
-            <!-- Add website when available -->
-            <!-- <a href="https://example.com" target="_blank">example.com</a> -->
-          </span>
-        </div>
+        {post.data.website && (
+          <div class="catalog-row">
+            <span class="catalog-label">WEB:</span>
+            <span class="catalog-value">
+              <a href={post.data.website} target="_blank">{post.data.website.replace(/^https?:\/\//, '').replace(/^www\./, '')}</a>
+            </span>
+          </div>
+        )}
       </div>
 
       <!-- Share Box -->
@@ -145,7 +145,7 @@ const { Content } = await post.render();
   .gallery-thumbnails {
     display: flex;
     gap: 1rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2.5rem;
     flex-wrap: wrap;
     justify-content: center;
   }
@@ -194,44 +194,40 @@ const { Content } = await post.render();
     color: var(--accent);
   }
 
-  /* Info and Share Container - Side by Side with equal heights */
+  /* Info and Share Container - Share box scales with info */
   .info-share-container {
     display: flex;
     gap: 1.5rem;
-    margin: 2rem 0;
+    margin: 3rem 0;
     align-items: stretch;
   }
 
-  /* Info Box - Takes up more space */
+  /* Info Box - Main content */
   .info-box {
+    flex: 3;
+    background: var(--bg);
+    padding: 1.5rem;
+    font-family: "Special Elite", monospace;
+    border: 3px solid rgba(30,30,30,0.8);
+    border-radius: 3px 1px 2px 2px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: inset 0 0 0 1px rgba(30,30,30,0.3);
+    filter: blur(0.3px);
+  }
+
+  /* Share Box - Smaller companion */
+  .share-box {
     flex: 2;
     background: var(--bg);
     padding: 1.5rem;
     font-family: "Special Elite", monospace;
-    border: 2px solid rgba(42,42,42,0.7);
-    border-top-width: 3px;
-    border-right-width: 1px;
-    border-bottom-width: 2px;
-    border-left-width: 3px;
-    border-radius: 2px 0px 3px 1px;
+    border: 3px solid rgba(30,30,30,0.8);
+    border-radius: 2px 3px 1px 3px;
     display: flex;
     flex-direction: column;
-  }
-
-  /* Share Box - Different stamped look */
-  .share-box {
-    flex: 1;
-    background: var(--bg);
-    padding: 1.5rem;
-    font-family: "Special Elite", monospace;
-    border: 3px solid rgba(42,42,42,0.5);
-    border-left-width: 1px;
-    border-top-width: 1px;
-    border-right-width: 4px;
-    border-bottom-width: 4px;
-    border-radius: 0px 4px 1px 0px;
-    display: flex;
-    flex-direction: column;
+    box-shadow: inset 0 0 0 1px rgba(30,30,30,0.3);
+    filter: blur(0.3px);
   }
 
   .box-title {
@@ -534,30 +530,38 @@ const { Content } = await post.render();
   }
 
   function shareToInstagram() {
-    navigator.clipboard.writeText(window.location.href);
-    alert('Link copied! Share on Instagram Stories or posts.');
+    const shareText = `${document.title} - Captured on Instax Square with Hasselblad 500CM • LAonFilm.com - a love letter to Los Angeles`;
+    navigator.clipboard.writeText(`${shareText}\n\n${window.location.href}`);
+    alert('Caption and link copied! Paste into your Instagram post or story.');
   }
 
   function shareToTikTok() {
     const url = encodeURIComponent(window.location.href);
-    const text = encodeURIComponent(document.title);
+    const text = encodeURIComponent(`${document.title} - LAonFilm • Shot on vintage Hasselblad with Instax Square film`);
     window.open(`https://www.tiktok.com/share?url=${url}&title=${text}`, '_blank');
   }
 
   function shareToYouTube() {
-    navigator.clipboard.writeText(window.location.href);
-    alert('Link copied! Share in YouTube community posts or comments.');
+    const shareText = `Check out this LA spot: ${document.title}\n\nShot on vintage Hasselblad 500CM with Instax Square film\nLAonFilm.com - a love letter to Los Angeles\n\n${window.location.href}`;
+    navigator.clipboard.writeText(shareText);
+    alert('Share text copied! Perfect for YouTube community posts or video descriptions.');
   }
 
   function shareToTwitter() {
     const url = encodeURIComponent(window.location.href);
-    const text = encodeURIComponent(document.title + ' - LAonFilm');
+    const text = encodeURIComponent(`${document.title} - captured on Instax Square film 📸 LAonFilm.com`);
     window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
   }
 
   function shareToReddit() {
     const url = encodeURIComponent(window.location.href);
-    const text = encodeURIComponent(document.title + ' - LAonFilm');
+    const text = encodeURIComponent(`${document.title} - Shot on vintage Hasselblad with Instax Square [LAonFilm]`);
     window.open(`https://reddit.com/submit?url=${url}&title=${text}`, '_blank');
+  }
+
+  function shareViaEmail() {
+    const subject = encodeURIComponent(`${document.title} - LAonFilm`);
+    const body = encodeURIComponent(`I thought you'd enjoy this LA spot I found:\n\n${document.title}\n\nShot on vintage Hasselblad 500CM with Instax Square instant film.\n\nCheck it out: ${window.location.href}\n\nFrom LAonFilm.com - a love letter to Los Angeles through analog photography.`);
+    window.location.href = `mailto:?subject=${subject}&body=${body}`;
   }
 </script>

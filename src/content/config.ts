@@ -7,6 +7,7 @@ const posts = defineCollection({
     categories: z.array(z.string()),
     image: z.string(),
     location: z.string().optional(),
+    website: z.string().optional(), // Add this line
   }),
 });
 

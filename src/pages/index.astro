@@ -8,9 +8,9 @@ const posts = (await getCollection("posts"))
 
 <Site title="LAonFilm">
   <div class="grid">
-    {posts.map((p) => (
+    {posts.map((p, index) => (
       <a
-        class="card"
+        class={`card card-${(index % 12) + 1}`}
         href={`/${p.slug}`}
         aria-label={p.data.title}
         title={p.data.title}
@@ -20,3 +20,110 @@ const posts = (await getCollection("posts"))
     ))}
   </div>
 </Site>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--space-6);
+  }
+
+  .card {
+    display: block;
+    text-decoration: none;
+    transition: transform 0.15s ease;
+    will-change: transform;
+    position: relative;
+  }
+
+  .card:focus-visible { 
+    outline: 2px dashed var(--link); 
+    outline-offset: 3px; 
+  }
+
+  .card img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,.15));
+  }
+
+  /* More varied rotation angles with organic positioning */
+  .card-1 { 
+    transform: rotate(-3.2deg) translateY(-2px) translateX(1px); 
+    z-index: 1;
+  }
+  .card-2 { 
+    transform: rotate(2.8deg) translateY(3px) translateX(-2px); 
+    z-index: 2;
+  }
+  .card-3 { 
+    transform: rotate(-1.5deg) translateY(1px) translateX(2px); 
+    z-index: 3;
+  }
+  .card-4 { 
+    transform: rotate(4.1deg) translateY(-1px) translateX(-1px); 
+    z-index: 1;
+  }
+  .card-5 { 
+    transform: rotate(-2.3deg) translateY(2px) translateX(3px); 
+    z-index: 2;
+  }
+  .card-6 { 
+    transform: rotate(1.7deg) translateY(-3px) translateX(-2px); 
+    z-index: 1;
+  }
+  .card-7 { 
+    transform: rotate(-4.5deg) translateY(1px) translateX(1px); 
+    z-index: 3;
+  }
+  .card-8 { 
+    transform: rotate(3.3deg) translateY(2px) translateX(-3px); 
+    z-index: 1;
+  }
+  .card-9 { 
+    transform: rotate(-1.8deg) translateY(-1px) translateX(2px); 
+    z-index: 2;
+  }
+  .card-10 { 
+    transform: rotate(2.1deg) translateY(3px) translateX(-1px); 
+    z-index: 1;
+  }
+  .card-11 { 
+    transform: rotate(-3.7deg) translateY(-2px) translateX(2px); 
+    z-index: 2;
+  }
+  .card-12 { 
+    transform: rotate(1.4deg) translateY(1px) translateX(-2px); 
+    z-index: 3;
+  }
+
+  /* Hover and touch effects */
+  .card:hover,
+  .card:active {
+    transform: rotate(0deg) translateX(0) translateY(0) scale(1.02);
+    z-index: 10 !important;
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 480px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-4);
+    }
+
+    /* Reduced translations on mobile for tighter spacing */
+    .card-1 { transform: rotate(-3.2deg) translateY(-1px) translateX(0.5px); }
+    .card-2 { transform: rotate(2.8deg) translateY(1.5px) translateX(-1px); }
+    .card-3 { transform: rotate(-1.5deg) translateY(0.5px) translateX(1px); }
+    .card-4 { transform: rotate(4.1deg) translateY(-0.5px) translateX(-0.5px); }
+    .card-5 { transform: rotate(-2.3deg) translateY(1px) translateX(1.5px); }
+    .card-6 { transform: rotate(1.7deg) translateY(-1.5px) translateX(-1px); }
+    .card-7 { transform: rotate(-4.5deg) translateY(0.5px) translateX(0.5px); }
+    .card-8 { transform: rotate(3.3deg) translateY(1px) translateX(-1.5px); }
+    .card-9 { transform: rotate(-1.8deg) translateY(-0.5px) translateX(1px); }
+    .card-10 { transform: rotate(2.1deg) translateY(1.5px) translateX(-0.5px); }
+    .card-11 { transform: rotate(-3.7deg) translateY(-1px) translateX(1px); }
+    .card-12 { transform: rotate(1.4deg) translateY(0.5px) translateX(-1px); }
+  }
+</style>
