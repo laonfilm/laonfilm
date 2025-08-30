@@ -13,8 +13,25 @@ export async function getStaticPaths() {
 
 // Get the current post
 const { post } = Astro.props;
-const { title, date, categories, image, location } = post.data;
+const { title, date, ref, image, location } = post.data;
 const { Content } = await post.render();
+
+// Get all posts for navigation (no filtering at build time)
+const allPosts = await getCollection('posts');
+allPosts.sort((a, b) => new Date(b.data.date) - new Date(a.data.date));
+
+const currentSlug = Astro.params.slug;
+const currentIndex = allPosts.findIndex(p => p.slug === currentSlug);
+const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
+const prevPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
+
+// Pass data to client-side script
+const navData = {
+  currentSlug,
+  nextPost: nextPost ? { slug: nextPost.slug, title: nextPost.data.title, ref: nextPost.data.ref } : null,
+  prevPost: prevPost ? { slug: prevPost.slug, title: prevPost.data.title, ref: prevPost.data.ref } : null,
+  allPosts: allPosts.map(p => ({ slug: p.slug, title: p.data.title, ref: p.data.ref }))
+};
 ---
 
 <Site title={title}>
@@ -47,13 +64,13 @@ const { Content } = await post.render();
           <span class="catalog-value">{title}</span>
         </div>
 
-        {categories && categories.length > 0 && (
+{ref && (Array.isArray(ref) ? ref.length > 0 : ref) && (
           <div class="catalog-row">
             <span class="catalog-label">REF:</span>
             <span class="catalog-value">
-              <span set:html={categories.map(category => 
-                `<a href="/tagged/${category.toLowerCase()}">${category}</a>`
-              ).join(' · ')} />
+<span set:html={(Array.isArray(ref) ? ref : [ref]).map(r => 
+  `<a href="/ref/${r.toLowerCase()}">${r.charAt(0).toUpperCase() + r.slice(1)}</a>`
+).join(' · ')} />
             </span>
           </div>
         )}
@@ -115,6 +132,25 @@ const { Content } = await post.render();
     <div class="post-content">
       <Content />
     </div>
+
+    <!-- Context-aware navigation -->
+    <nav class="post-navigation">
+      <div class="nav-back">
+        <a href="/" class="back-link" id="backLink">Back to Home</a>
+      </div>
+      
+      <div class="nav-posts">
+        <a href="#" class="nav-post prev-post" id="prevPost" style="display: none;">
+          <span class="nav-direction">← Previous</span>
+          <span class="nav-title" id="prevTitle"></span>
+        </a>
+        
+        <a href="#" class="nav-post next-post" id="nextPost" style="display: none;">
+          <span class="nav-direction">Next →</span>
+          <span class="nav-title" id="nextTitle"></span>
+        </a>
+      </div>
+    </nav>
   </article>
 </Site>
 
@@ -262,20 +298,24 @@ const { Content } = await post.render();
     font-size: 1rem;
   }
 
-  .catalog-value {
-    flex: 1;
-    font-size: 1rem;
-    line-height: 1.4;
-  }
+.catalog-value {
+  flex: 1;
+  font-size: 1rem;
+  line-height: 1.4;
+  word-break: break-all; /* Force long URLs to break */
+  overflow-wrap: break-word; /* Fallback for better browser support */
+}
 
-  .catalog-value a {
-    text-decoration: underline !important;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 2px;
-    color: var(--accent) !important;
-    font-weight: 600;
-    transition: none !important;
-  }
+.catalog-value a {
+  text-decoration: underline !important;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  color: var(--accent) !important;
+  font-weight: 600;
+  transition: none !important;
+  word-break: break-all; /* Break long URLs */
+  overflow-wrap: break-word;
+}
 
   .catalog-value a:hover {
     color: var(--accent) !important;
@@ -436,91 +476,198 @@ const { Content } = await post.render();
     margin-bottom: 1.5rem;
   }
 
-  /* Mobile adjustments - keep boxes side by side */
-  @media (max-width: 768px) {
-    .post-container {
-      padding: 0.5rem;
-    }
+/* Post Navigation */
+.post-navigation {
+  margin: 3rem 0 2rem 0;
+  font-family: "Special Elite", monospace;
+}
 
-    .hero-image {
-      max-width: 350px;
-    }
+.nav-back {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
 
-    .info-share-container {
-      gap: 0.5rem;
-      margin: 1.5rem auto;
-      max-width: 100%;
-      justify-content: center;
-    }
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent) !important;
+  text-decoration: none !important;
+  font-size: 1rem;
+  padding: 0.75rem 1rem; /* Increased top/bottom padding */
+  border: 2px solid var(--accent);
+  border-radius: 4px;
+  transition: background 0.2s ease;
+  min-height: 44px; /* Ensure consistent button height */
+}
 
-    .info-box {
-      flex: 2;
-      padding: 0.75rem;
-      min-width: 0;
-    }
+.back-link:hover {
+  background: var(--accent);
+  color: var(--bg) !important;
+  text-decoration: none !important;
+}
 
-    .share-box {
-      flex: 1;
-      padding: 0.75rem;
-      min-width: 0;
-    }
+.nav-posts {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 80px;
+  align-items: stretch;
+}
 
-    .catalog-label {
-      font-size: 0.9rem;
-      min-width: 2.8rem;
-    }
+.nav-post.next-post {
+  margin-left: auto;
+  order: 2;
+}
 
-    .catalog-value {
-      font-size: 0.9rem;
-    }
+.nav-post.prev-post {
+  margin-right: auto;
+  order: 1;
+}
 
-    .catalog-location {
-      font-size: 0.9rem;
-    }
+.nav-post {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center content vertically */
+  color: var(--text) !important;
+  text-decoration: none !important;
+  padding: 1rem;
+  border: 2px solid var(--text);
+  border-radius: 4px;
+  max-width: 45%;
+  min-width: 40%;
+  text-align: center;
+  transition: all 0.2s ease;
+}
 
-    .map-links a {
-      font-size: 0.9rem;
-    }
+.nav-post:hover {
+  background: var(--text);
+  color: var(--bg) !important;
+  text-decoration: none !important;
+}
 
-    .stamp.small {
-      width: 40px;
-      height: 40px;
-      font-size: 0.5rem;
-    }
+.nav-direction {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin-bottom: 0.25rem;
+}
 
-    .stamp.medium {
-      width: 45px;
-      height: 45px;
-      font-size: 0.55rem;
-    }
+.nav-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
 
-    .stamp.large {
-      width: 50px;
-      height: 50px;
-      font-size: 0.6rem;
-    }
-
-    .stamp-text-large {
-      font-size: 0.9rem;
-    }
-
-    .gallery-thumbnails {
-      gap: 0.75rem;
-    }
-
-    .thumbnail {
-      width: 60px;
-      height: 60px;
-      border: 4px solid white;
-    }
-
-    .share-stamps-grid {
-      gap: 4px;
-    }
+/* Mobile adjustments - OVERRIDE the existing mobile styles */
+@media (max-width: 768px) {
+  .post-container {
+    padding: 0.5rem;
   }
+
+  .hero-image {
+    max-width: 350px;
+  }
+
+  .info-share-container {
+    gap: 0.5rem;
+    margin: 1.5rem auto;
+    max-width: 100%;
+    justify-content: center;
+  }
+
+  .info-box {
+    flex: 2;
+    padding: 0.75rem;
+    min-width: 0;
+  }
+
+  .share-box {
+    flex: 1;
+    padding: 0.75rem;
+    min-width: 0;
+  }
+
+  /* Navigation stays side-by-side on mobile */
+  .nav-posts {
+    flex-direction: row !important; /* Force row layout */
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  
+  .nav-post {
+    max-width: 48%;
+    min-width: 45%;
+    padding: 0.75rem 0.5rem;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .nav-direction {
+    font-size: 0.8rem;
+  }
+  
+  .nav-title {
+    font-size: 0.75rem;
+    line-height: 1.2;
+  }
+
+  .catalog-label {
+    font-size: 0.9rem;
+    min-width: 2.8rem;
+  }
+
+  .catalog-value {
+    font-size: 0.9rem;
+  }
+
+  .catalog-location {
+    font-size: 0.9rem;
+  }
+
+  .map-links a {
+    font-size: 0.9rem;
+  }
+
+  .stamp.small {
+    width: 40px;
+    height: 40px;
+    font-size: 0.5rem;
+  }
+
+  .stamp.medium {
+    width: 45px;
+    height: 45px;
+    font-size: 0.55rem;
+  }
+
+  .stamp.large {
+    width: 50px;
+    height: 50px;
+    font-size: 0.6rem;
+  }
+
+  .stamp-text-large {
+    font-size: 0.9rem;
+  }
+
+  .gallery-thumbnails {
+    gap: 0.75rem;
+  }
+
+  .thumbnail {
+    width: 60px;
+    height: 60px;
+    border: 4px solid white;
+  }
+
+  .share-stamps-grid {
+    gap: 4px;
+  }
+}
+
 </style>
 
-<script>
+<script define:vars={{ navData }}>
   function swapHeroImage(newSrc) {
     document.getElementById('hero-image').src = newSrc;
   }
@@ -530,7 +677,7 @@ const { Content } = await post.render();
   }
 
   function shareToInstagram() {
-    const shareText = `${document.title} - Captured on Instax Square with Hasselblad 500CM • LAonFilm.com - a love letter to Los Angeles`;
+    const shareText = `${document.title} - Captured on Instax Square with Hasselblad 500CM • LAonFilm.com - A love letter to Los Angeles, written on instant film.`;
     navigator.clipboard.writeText(`${shareText}\n\n${window.location.href}`);
     alert('Caption and link copied! Paste into your Instagram post or story.');
   }
@@ -542,7 +689,7 @@ const { Content } = await post.render();
   }
 
   function shareToYouTube() {
-    const shareText = `Check out this LA spot: ${document.title}\n\nShot on vintage Hasselblad 500CM with Instax Square film\nLAonFilm.com - a love letter to Los Angeles\n\n${window.location.href}`;
+    const shareText = `Check out this LA spot: ${document.title}\n\nShot on vintage Hasselblad 500CM with Instax Square film\nLAonFilm.com - A love letter to Los Angeles, written on instant film.\n\n${window.location.href}`;
     navigator.clipboard.writeText(shareText);
     alert('Share text copied! Perfect for YouTube community posts or video descriptions.');
   }
@@ -561,7 +708,55 @@ const { Content } = await post.render();
 
   function shareViaEmail() {
     const subject = encodeURIComponent(`${document.title} - LAonFilm`);
-    const body = encodeURIComponent(`I thought you'd enjoy this LA spot I found:\n\n${document.title}\n\nShot on vintage Hasselblad 500CM with Instax Square instant film.\n\nCheck it out: ${window.location.href}\n\nFrom LAonFilm.com - a love letter to Los Angeles through analog photography.`);
+    const body = encodeURIComponent(`I thought you'd enjoy this LA spot I found:\n\n${document.title}\n\nShot on vintage Hasselblad 500CM with Instax Square instant film.\n\nCheck it out: ${window.location.href}\n\nFrom LAonFilm.com - A love letter to Los Angeles, written on instant film.`);
     window.location.href = `mailto:?subject=${subject}&body=${body}`;
   }
+
+  // Navigation logic - runs client-side
+  document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const fromRef = urlParams.get('from');
+
+    // Update back button
+    const backLink = document.getElementById('backLink');
+    if (fromRef === 'search') {
+      backLink.href = '/search';
+      backLink.textContent = 'Back to Search';
+    } else if (fromRef) {
+      backLink.href = `/ref/${fromRef}`;
+      backLink.textContent = `Back to ${fromRef.charAt(0).toUpperCase() + fromRef.slice(1)}`;
+    }
+
+    // Filter posts based on context
+    let contextPosts = navData.allPosts;
+    if (fromRef && fromRef !== 'search') {
+      contextPosts = navData.allPosts.filter(post => {
+        const refs = post.ref || [];
+        const refArray = Array.isArray(refs) ? refs : [refs];
+        return refArray.some(r => r.toLowerCase() === fromRef.toLowerCase());
+      });
+    }
+
+    // Find navigation in filtered context
+    const currentIdx = contextPosts.findIndex(p => p.slug === navData.currentSlug);
+    const contextNext = currentIdx < contextPosts.length - 1 ? contextPosts[currentIdx + 1] : null;
+    const contextPrev = currentIdx > 0 ? contextPosts[currentIdx - 1] : null;
+
+    // Update navigation buttons
+    if (contextPrev) {
+      const prevPost = document.getElementById('prevPost');
+      const prevTitle = document.getElementById('prevTitle');
+      prevPost.href = `/${contextPrev.slug}/${fromRef ? `?from=${fromRef}` : ''}`;
+      prevTitle.textContent = contextPrev.title;
+      prevPost.style.display = 'flex';
+    }
+
+    if (contextNext) {
+      const nextPost = document.getElementById('nextPost');
+      const nextTitle = document.getElementById('nextTitle');
+      nextPost.href = `/${contextNext.slug}/${fromRef ? `?from=${fromRef}` : ''}`;
+      nextTitle.textContent = contextNext.title;
+      nextPost.style.display = 'flex';
+    }
+  });
 </script>

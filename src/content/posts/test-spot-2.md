@@ -1,10 +1,10 @@
 ---
-title: "Griffith Observatory"
-date: "2024-08-26"
-categories: ["Food", "Culture"]
-image: "/images/test-spot-2.jpg"
-location: "2800 E. Observatory Rd. LA, CA  90027"
-website: "https://griffithobservatory.org"
+title: Griffith Observatory
+date: 2024-08-26
+ref: [Food, Culture]
+image: /images/test-spot-2.jpg
+location: 2800 E. Observatory Rd. LA, CA  90027
+website: https://griffithobservatory.org
 ---
 
 # Griffith Observatory View

@@ -42,6 +42,13 @@ body{
   overflow-x: hidden; /* stop sideways scroll on mobile */
 }
 
+img.page-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto 1.5rem auto; /* bottom margin added */
+}
+
 /* Typography */
 h1,h2,h3 {
   color: var(--text);
@@ -106,7 +113,7 @@ a:hover { color: var(--link-h); }
 .container{
   max-width: var(--container);
   margin: 0 auto;
-  padding: var(--space-8) var(--space-4);
+  padding: var(--space-8) 2rem; /* Increased left/right padding */
 }
 
 /* ===== Homepage grid (image-only, slight tilt) ===== */
@@ -116,11 +123,27 @@ a:hover { color: var(--link-h); }
   gap: var(--space-6);
 }
 
-/* Mobile: 2 columns instead of 1 */
+/* Tablet: force 2 columns to prevent overflow */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-5);
+  }
+  
+  .container {
+    padding: var(--space-8) 1.5rem;
+  }
+}
+
+/* Mobile: 2 columns with smaller spacing */
 @media (max-width: 480px) {
   .grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-4); /* slightly smaller gap on mobile */
+    gap: var(--space-4);
+  }
+  
+  .container {
+    padding: var(--space-6) 1rem;
   }
 }
 
@@ -212,7 +235,7 @@ main a:hover {
   color: var(--text);
 }
 
-/* Footer About + Social links — override global link color */
+/* Footer About + Social links – override global link color */
 .site-footer .footer-left a,
 .site-footer .footer-right a {
   text-decoration: none;

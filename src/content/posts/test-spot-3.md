@@ -1,9 +1,9 @@
 ---
-title: "Venice Beach Murals"
-date: "2024-08-25"
-categories: ["culture", "views"]
-image: "/images/test-spot-3.jpg"
-location: "Venice, LA"
+title: Venice Beach Murals
+date: 2024-08-25
+ref: [culture, views]
+image: /images/test-spot-3.jpg
+location: Venice, LA
 ---
 
 # Venice Beach Murals

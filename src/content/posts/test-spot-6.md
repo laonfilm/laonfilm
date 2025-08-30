@@ -1,9 +1,9 @@
 ---
-title: "Santa Monica Pier"
-date: "2024-08-22"
-categories: ["views"]
-image: "/images/test-spot-6.jpg"
-location: "Santa Monica, LA"
+title: Santa Monica Pier
+date: 2024-08-22
+ref: [views]
+image: /images/test-spot-6.jpg
+location: Santa Monica, LA
 ---
 
 # Santa Monica Pier

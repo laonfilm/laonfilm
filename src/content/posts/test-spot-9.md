@@ -1,9 +1,9 @@
 ---
-title: "Melrose Avenue Vintage"
-date: "2024-08-19"
-categories: ["culture"]
-image: "/images/test-spot-9.jpg"
-location: "West Hollywood, LA"
+title: Melrose Avenue Vintage
+date: 2024-08-19
+ref: [culture]
+image: /images/test-spot-9.jpg
+location: West Hollywood, LA
 ---
 
 # Melrose Avenue Vintage

@@ -1,33 +1,90 @@
 ---
-import Site from "../layouts/Site.astro";
-import { getCollection } from "astro:content";
+// src/pages/ref/[ref].astro
+import { getCollection } from 'astro:content';
+import Site from '../../layouts/Site.astro';
 
-const posts = (await getCollection("posts"))
-  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+export async function getStaticPaths() {
+  const allPosts = await getCollection('posts');
+  
+  // Get all unique refs, handle both single strings and arrays
+  const allRefs = [...new Set(allPosts.flatMap(post => {
+    const refs = post.data.ref || [];
+    // Handle single ref (string) or multiple refs (array)
+    const refArray = Array.isArray(refs) ? refs : [refs];
+    return refArray.filter(ref => ref && ref.trim()).map(ref => ref.toLowerCase());
+  }))];
+  
+  return allRefs.map(ref => ({
+    params: { ref: ref },
+    props: { ref }
+  }));
+}
+
+const { ref } = Astro.props;
+
+// Get all posts for this ref (handle both single strings and arrays)
+const allPosts = await getCollection('posts');
+const refPosts = allPosts.filter(post => {
+  const refs = post.data.ref || [];
+  const refArray = Array.isArray(refs) ? refs : [refs];
+  return refArray.some(r => r.toLowerCase() === ref.toLowerCase());
+});
+
+// Sort by date, newest first
+refPosts.sort((a, b) => new Date(b.data.date) - new Date(a.data.date));
+
+// Always capitalize for display
+const refTitle = ref.charAt(0).toUpperCase() + ref.slice(1);
 ---
 
-<Site title="LAonFilm">
-  <div class="grid">
-    {posts.map((p, index) => (
-      <a
-        class={`card card-${(index % 12) + 1}`}
-        href={`/${p.slug}`}
-        aria-label={p.data.title}
-        title={p.data.title}
-      >
-        <img src={p.data.image} alt={p.data.title} loading="lazy" />
-      </a>
-    ))}
-  </div>
+<Site title={refTitle}>
+  <!-- Ref title, centered -->
+  <h1 class="category-title">{refTitle}</h1>
+  
+  {refPosts.length > 0 ? (
+    <!-- Same grid as homepage -->
+<div class="grid">
+  {refPosts.map((post, index) => (
+    <a 
+      href={`/${post.slug}/?from=${ref}`} 
+      class={`card card-${(index % 12) + 1}`}
+      aria-label={post.data.title}
+      title={post.data.title}
+    >
+      <img 
+        src={post.data.image} 
+        alt={post.data.title}
+        loading="lazy"
+      />
+    </a>
+  ))}
+</div>
+  ) : (
+    <!-- Coming soon message -->
+    <div class="coming-soon">- Coming Soon -</div>
+  )}
 </Site>
 
 <style>
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: var(--space-6);
+  .category-title {
+    text-align: center;
+    font-size: 2.5rem;
+    color: var(--text);
+    margin: 0 0 3rem 0;
+    font-weight: 700;
+  }
+  
+  .coming-soon {
+    text-align: center;
+    font-size: 1.5rem;
+    color: var(--text);
+    opacity: 0.7;
+    margin: 4rem 0;
+    font-family: "Special Elite", "Courier New", Courier, monospace;
+    letter-spacing: 0.1em;
   }
 
+  /* Add the exact card styles from your homepage */
   .card {
     display: block;
     text-decoration: none;
@@ -48,7 +105,7 @@ const posts = (await getCollection("posts"))
     filter: drop-shadow(0 2px 6px rgba(0,0,0,.15));
   }
 
-  /* More varied rotation angles with organic positioning */
+  /* Copy all the card transforms from your homepage */
   .card-1 { 
     transform: rotate(-3.2deg) translateY(-2px) translateX(1px); 
     z-index: 1;
@@ -98,29 +155,26 @@ const posts = (await getCollection("posts"))
     z-index: 3;
   }
 
-  /* Hover and touch effects */
+  /* Hover effects */
   .card:hover,
   .card:active {
     transform: rotate(0deg) translateX(0) translateY(0) scale(1.02);
     z-index: 10 !important;
   }
 
-/* Tablet: force 2 columns to prevent overflow */
-@media (max-width: 768px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-5);
-  }
-}
-
   /* Mobile adjustments */
   @media (max-width: 480px) {
-    .grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--space-4);
+    .category-title {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .coming-soon {
+      font-size: 1.25rem;
+      margin: 3rem 0;
     }
 
-    /* Reduced translations on mobile for tighter spacing */
+    /* Reduced transforms for mobile */
     .card-1 { transform: rotate(-3.2deg) translateY(-1px) translateX(0.5px); }
     .card-2 { transform: rotate(2.8deg) translateY(1.5px) translateX(-1px); }
     .card-3 { transform: rotate(-1.5deg) translateY(0.5px) translateX(1px); }

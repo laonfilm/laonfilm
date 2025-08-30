@@ -14,5 +14,8 @@
     "astro": "^5.13.3",
     "minisearch": "^7.1.2",
     "satori": "^0.16.2"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.12"
   }
 }

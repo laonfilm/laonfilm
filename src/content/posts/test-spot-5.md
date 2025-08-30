@@ -1,9 +1,9 @@
 ---
-title: "Hollywood Forever Cemetery"
-date: "2024-08-23"
-categories: ["culture"]
-image: "/images/test-spot-5.jpg"
-location: "Hollywood, LA"
+title: Hollywood Forever Cemetery
+date: 2024-08-23
+ref: [culture]
+image: /images/test-spot-5.jpg
+location: Hollywood, LA
 ---
 
 # Hollywood Forever Cemetery

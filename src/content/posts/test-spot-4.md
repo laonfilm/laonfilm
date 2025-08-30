@@ -1,9 +1,9 @@
 ---
-title: "Highland Park Coffee"
-date: "2024-08-24"
-categories: ["drink"]
-image: "/images/test-spot-4.jpg"
-location: "Highland Park, LA"
+title: Highland Park Coffee
+date: 2024-08-24
+ref: [drink]
+image: /images/test-spot-4.jpg
+location: Highland Park, LA
 ---
 
 # Highland Park Coffee

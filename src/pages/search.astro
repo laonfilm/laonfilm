@@ -1,42 +1,295 @@
 ---
-const q = Astro.url.searchParams.get('q') ?? '';
+// src/pages/search.astro
+import { getCollection } from 'astro:content';
+import Site from '../layouts/Site.astro';
+
+// Get all posts for client-side search
+const allPosts = await getCollection('posts');
+const postsData = allPosts.map(post => ({
+  slug: post.slug,
+  title: post.data.title,
+  ref: post.data.ref,
+  location: post.data.location,
+  image: post.data.image,
+  date: post.data.date
+}));
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Search — LAonFilm</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="/styles/base.css" />
-  </head>
-  <body>
-    <main class="container" style="max-width: 720px;">
-      <h1 style="margin-bottom: 1rem;">Search</h1>
+<Site title="Search">
+  <h1 class="search-title">Search</h1>
+  
+  <div class="search-container">
+    <input 
+      type="text" 
+      id="searchInput" 
+      placeholder="Search by title, location, or ref..." 
+      class="search-input"
+    />
+    <button id="searchButton" class="search-button">Go</button>
+  </div>
 
-      <form action="/search" method="get" style="display:flex; gap:.5rem;">
-        <input
-          type="text"
-          name="q"
-          value={q}
-          placeholder="Type and press Enter"
-          style="flex:1; padding:.5rem .75rem; border:1px dashed rgba(0,0,0,.3); background:transparent; font: inherit;"
-        />
-        <button
-          type="submit"
-          style="border:1px dashed rgba(0,0,0,.3); background:transparent; padding:.5rem .75rem; cursor:pointer; font: inherit;"
+  <div id="searchResults" class="search-results">
+    <!-- Results will appear here -->
+  </div>
+
+  <div id="noResults" class="no-results" style="display: none;">
+    <div class="coming-soon">- No results found -</div>
+  </div>
+</Site>
+
+<style>
+  /* Override container padding */
+  :global(.container) {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .search-title {
+    text-align: center;
+    font-size: 2.5rem;
+    color: var(--text);
+    margin: 0 0 3rem 0;
+    font-weight: 700;
+  }
+
+  .search-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 3rem;
+    gap: 0.5rem;
+  }
+
+  .search-input {
+    width: 100%;
+    max-width: 350px;
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-family: "Special Elite", "Courier New", Courier, monospace;
+    border: 2px solid var(--text);
+    background: var(--bg);
+    color: var(--text);
+    border-radius: 4px 0 0 4px;
+    outline: none;
+  }
+
+  .search-button {
+    padding: 1rem 1.5rem;
+    font-size: 1.1rem;
+    font-family: "Special Elite", "Courier New", Courier, monospace;
+    border: 2px solid var(--text);
+    border-left: none;
+    background: var(--text);
+    color: var(--bg);
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .search-button:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .search-input:focus {
+    border-color: var(--accent);
+  }
+
+  .search-input::placeholder {
+    color: var(--text);
+    opacity: 0.6;
+  }
+
+  .search-results {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--space-6);
+  }
+
+  .no-results {
+    text-align: center;
+    margin: 4rem 0;
+  }
+
+  .coming-soon {
+    text-align: center;
+    font-size: 1.5rem;
+    color: var(--text);
+    opacity: 0.7;
+    margin: 4rem 0;
+    font-family: "Special Elite", "Courier New", Courier, monospace;
+    letter-spacing: 0.1em;
+  }
+
+  /* Tablet: force 2 columns */
+  @media (max-width: 768px) {
+    .search-results {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-5);
+    }
+  }
+
+  /* Mobile: 2 columns */
+  @media (max-width: 480px) {
+    :global(.container) {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+
+    .search-results {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-4);
+    }
+    
+    .search-title {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .search-input {
+      font-size: 1rem;
+      padding: 0.75rem;
+    }
+
+    .coming-soon {
+      font-size: 1.25rem;
+      margin: 3rem 0;
+    }
+  }
+</style>
+
+<script define:vars={{ postsData }}>
+  let currentResults = [];
+  
+  function performSearch(query) {
+    if (!query.trim()) {
+      showAllPosts();
+      return;
+    }
+
+    const searchTerm = query.toLowerCase();
+    const results = postsData.filter(post => {
+      // Search in title
+      if (post.title.toLowerCase().includes(searchTerm)) return true;
+      
+      // Search in location
+      if (post.location && post.location.toLowerCase().includes(searchTerm)) return true;
+      
+      // Search in refs
+      if (post.ref) {
+        const refs = Array.isArray(post.ref) ? post.ref : [post.ref];
+        if (refs.some(r => r.toLowerCase().includes(searchTerm))) return true;
+      }
+      
+      return false;
+    });
+
+    displayResults(results);
+  }
+
+  function displayResults(results) {
+    const resultsContainer = document.getElementById('searchResults');
+    const noResults = document.getElementById('noResults');
+    
+    if (results.length === 0) {
+      resultsContainer.innerHTML = '';
+      noResults.style.display = 'block';
+      return;
+    }
+
+    noResults.style.display = 'none';
+    
+    // Define the exact same transforms as homepage
+    const cardTransforms = [
+      'rotate(-3.2deg) translateY(-2px) translateX(1px)',
+      'rotate(2.8deg) translateY(3px) translateX(-2px)', 
+      'rotate(-1.5deg) translateY(1px) translateX(2px)',
+      'rotate(4.1deg) translateY(-1px) translateX(-1px)',
+      'rotate(-2.3deg) translateY(2px) translateX(3px)',
+      'rotate(1.7deg) translateY(-3px) translateX(-2px)',
+      'rotate(-4.5deg) translateY(1px) translateX(1px)',
+      'rotate(3.3deg) translateY(2px) translateX(-3px)',
+      'rotate(-1.8deg) translateY(-1px) translateX(2px)',
+      'rotate(2.1deg) translateY(3px) translateX(-1px)',
+      'rotate(-3.7deg) translateY(-2px) translateX(2px)',
+      'rotate(1.4deg) translateY(1px) translateX(-2px)'
+    ];
+
+    const zIndexes = [1, 2, 3, 1, 2, 1, 3, 1, 2, 1, 2, 3];
+    
+    resultsContainer.innerHTML = results.map((post, index) => {
+      const transformIndex = index % 12;
+      const transform = cardTransforms[transformIndex];
+      const zIndex = zIndexes[transformIndex];
+      
+      return `
+        <a 
+          href="/${post.slug}/?from=search" 
+          class="dynamic-card"
+          style="
+            display: block;
+            text-decoration: none;
+            transition: transform 0.15s ease;
+            will-change: transform;
+            position: relative;
+            transform: ${transform};
+            z-index: ${zIndex};
+          "
+          onmouseover="this.style.transform='rotate(0deg) translateX(0) translateY(0) scale(1.02)'; this.style.zIndex='10';"
+          onmouseout="this.style.transform='${transform}'; this.style.zIndex='${zIndex}';"
+          aria-label="${post.title}" 
+          title="${post.title}"
         >
-          Go
-        </button>
-      </form>
+          <img 
+            src="${post.image}" 
+            alt="${post.title}"
+            loading="lazy"
+            style="
+              width: 100%;
+              height: auto;
+              display: block;
+              filter: drop-shadow(0 2px 6px rgba(0,0,0,.15));
+            "
+          />
+        </a>
+      `;
+    }).join('');
+    
+    currentResults = results;
+  }
 
-      {q && (
-        <p style="margin-top:1rem; opacity:.8;">
-          Showing results for: <strong>{q}</strong>
-        </p>
-      )}
+  function showAllPosts() {
+    displayResults(postsData);
+  }
 
-      <!-- Placeholder until wired to a real search index -->
-      <p style="margin-top:2rem; opacity:.7;">(Search results TBD)</p>
-    </main>
-  </body>
-</html>
+  // Initialize
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('searchInput');
+    
+    // Show all posts initially
+    showAllPosts();
+    
+    // Search as user types (debounced)
+    let searchTimeout;
+    searchInput.addEventListener('input', (e) => {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        performSearch(e.target.value);
+      }, 300);
+    });
+    
+    // Handle Go button click
+    const searchButton = document.getElementById('searchButton');
+    searchButton.addEventListener('click', () => {
+      clearTimeout(searchTimeout);
+      performSearch(searchInput.value);
+    });
+
+    // Handle Enter key
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        clearTimeout(searchTimeout);
+        performSearch(e.target.value);
+      }
+    });
+  });
+</script>
