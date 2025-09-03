@@ -1,0 +1,21 @@
+{
+    "name": "LAonFilm",
+    "short_name": "LAonFilm",
+    "description": "A love letter to Los Angeles, written on instant film.",
+    "icons": [
+        {
+            "src": "/laonfilm-icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/laonfilm-icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#B7410E",
+    "background_color": "#EBD7A3",
+    "display": "standalone",
+    "start_url": "/"
+}

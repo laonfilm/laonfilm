@@ -9,12 +9,23 @@ const { title } = Astro.props;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title ? `${title} · LAonFilm` : "LAonFilm"}</title>
+    <title>{title && title !== "LAonFilm" ? `${title} · LAonFilm` : "LAonFilm"}</title>
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/laonfilm-icon-48.png" />
+    <link rel="icon" type="image/png" sizes="64x64" href="/laonfilm-icon-64.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/laonfilm-icon-192.png" />
+    <link rel="icon" type="image/png" sizes="256x256" href="/laonfilm-icon-256.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/laonfilm-icon-512.png" />
 
     <!-- Keep Google Font via link for best performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+
+<link rel="manifest" href="/site.webmanifest" />
   </head>
   <body>
     <header class="site-header"><Nav /></header>

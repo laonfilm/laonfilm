@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
       textElement.textContent = targetText;
     }
     if (cursorElement) {
-      cursorElement.classList.add("hidden");
+      cursorElement.style.visibility = "hidden"; // Use visibility for consistency
     }
     return;
   }

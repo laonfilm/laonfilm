@@ -60,14 +60,20 @@ const postsData = allPosts.map(post => ({
   .search-input {
     width: 100%;
     max-width: 350px;
-    padding: 1rem;
     font-size: 1.1rem;
     font-family: "Special Elite", "Courier New", Courier, monospace;
     border: 2px solid var(--text);
     background: var(--bg);
     color: var(--text);
-    border-radius: 4px; /* Full radius since no button */
+    border-radius: 4px;
     outline: none;
+    
+    /* Fixed vertical centering - matching the slug page fix */
+    padding: 0.95rem 1rem 0.75rem 1rem;
+    line-height: 1 !important;
+    vertical-align: baseline !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
   }
 
   .search-input:focus {
@@ -131,7 +137,7 @@ const postsData = allPosts.map(post => ({
 
     .search-input {
       font-size: 1rem;
-      padding: 0.75rem;
+      padding: 0.75rem 0.75rem 0.65rem 0.75rem; /* Adjusted mobile padding too */
     }
 
     .coming-soon {
