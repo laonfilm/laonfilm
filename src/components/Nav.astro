@@ -1,17 +1,16 @@
 ---
 // src/components/Nav.astro
 const siteTitle = "LAonFilm";
-const tagline = "A love letter to Los Angeles, written on instant film.";
+// Removed tagline from here since it will be in the TypewriterTagline component
 ---
 <div class="nav-wrapper">
   <nav class="nav" aria-label="Primary">
-    <!-- Left: logo + title + – + tagline -->
+    <!-- Left: logo + title only -->
     <div class="brandline">
       <a href="/" class="brand" aria-label="LAonFilm home">
         <img src="/images/LAonFilm.png" alt="LAonFilm logo" class="logo" />
         <span class="title">{siteTitle}</span>
       </a>
-      <span class="tagline">– {tagline}</span>
     </div>
 
     <!-- Right: hamburger (typewriter vibe) -->
@@ -78,11 +77,10 @@ const tagline = "A love letter to Los Angeles, written on instant film.";
   opacity: 0.7;
 }
 
-/* ====== Left cluster: brand + tagline ====== */
+/* ====== Left cluster: brand only ====== */
 .brandline {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
   flex: 1 1 auto;
   min-width: 0;
 }
@@ -102,15 +100,6 @@ const tagline = "A love letter to Los Angeles, written on instant film.";
   height: 40px;
   width: auto;
   margin-right: 0.4rem;
-}
-
-.tagline {
-  font-size: 0.95rem;
-  color: var(--text);
-  opacity: 0.75;
-  letter-spacing: .3px;
-  margin-left: .1rem;
-  white-space: nowrap;
 }
 
 /* ====== Right cluster: links + hamburger ====== */
@@ -139,7 +128,6 @@ const tagline = "A love letter to Los Angeles, written on instant film.";
 
 /* ====== Mobile behavior ====== */
 @media (max-width: 720px) {
-  .tagline { display: none; }
   .logo { height: 36px; }
   .menu-btn { display: inline-block; }
 

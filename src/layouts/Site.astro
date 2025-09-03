@@ -18,9 +18,36 @@ const { title } = Astro.props;
   </head>
   <body>
     <header class="site-header"><Nav /></header>
-    <main class="container">
+    <main class="main-content">
       <slot />
     </main>
     <Footer /> 
+
+    <!-- GoatCounter tracking -->
+    <script data-goatcounter="https://laonfilm.goatcounter.com/count"
+            async src="//gc.zgo.at/count.js"></script>
   </body>
 </html>
+
+<style>
+  .main-content {
+    max-width: var(--container);
+    margin: 0 auto;
+    /* Added consistent top padding to match index.astro and [slug].astro */
+    padding: 2rem 2rem var(--space-8) 2rem;
+  }
+
+  /* Tablet */
+  @media (max-width: 768px) {
+    .main-content {
+      padding: 1.5rem 1.5rem var(--space-8) 1.5rem;
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: 480px) {
+    .main-content {
+      padding: 1rem 1rem var(--space-6) 1rem;
+    }
+  }
+</style>

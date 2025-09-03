@@ -1,5 +1,6 @@
 ---
 import Site from "../layouts/Site.astro";
+import TypewriterTagline from "../components/TypewriterTagline.astro";
 import { getCollection } from "astro:content";
 
 const posts = (await getCollection("posts"))
@@ -7,6 +8,9 @@ const posts = (await getCollection("posts"))
 ---
 
 <Site title="LAonFilm">
+  <!-- Typewriter tagline between nav and content -->
+  <TypewriterTagline />
+  
   <div class="grid">
     {posts.map((p, index) => (
       <a
@@ -26,6 +30,7 @@ const posts = (await getCollection("posts"))
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: var(--space-6);
+    /* Remove top margin since Site.astro now handles uniform spacing */
   }
 
   .card {
@@ -105,13 +110,13 @@ const posts = (await getCollection("posts"))
     z-index: 10 !important;
   }
 
-/* Tablet: force 2 columns to prevent overflow */
-@media (max-width: 768px) {
-  .grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-5);
+  /* Tablet: force 2 columns to prevent overflow */
+  @media (max-width: 768px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-5);
+    }
   }
-}
 
   /* Mobile adjustments */
   @media (max-width: 480px) {

@@ -16,6 +16,22 @@ const { post } = Astro.props;
 const { title, date, ref, image, location } = post.data;
 const { Content } = await post.render();
 
+// Extract first paragraph for social sharing
+const postBody = post.body;
+const firstParagraph = postBody.split('\n\n')[0].replace(/[#*`]/g, '').trim();
+const shareDescription = firstParagraph.length > 120 
+  ? firstParagraph.substring(0, 120) + '...'
+  : firstParagraph + '...';
+
+// Generate alt text for images
+const generateAltText = (title, location, ref) => {
+  const refText = Array.isArray(ref) ? ref[0] : ref;
+  const locationText = location || 'Los Angeles';
+  return `${title} in ${locationText} - LAonFilm ${refText || 'photography'}`;
+};
+
+const altText = generateAltText(title, location, ref);
+
 // Get all posts for navigation (no filtering at build time)
 const allPosts = await getCollection('posts');
 allPosts.sort((a, b) => new Date(b.data.date) - new Date(a.data.date));
@@ -30,7 +46,11 @@ const navData = {
   currentSlug,
   nextPost: nextPost ? { slug: nextPost.slug, title: nextPost.data.title, ref: nextPost.data.ref } : null,
   prevPost: prevPost ? { slug: prevPost.slug, title: prevPost.data.title, ref: prevPost.data.ref } : null,
-  allPosts: allPosts.map(p => ({ slug: p.slug, title: p.data.title, ref: p.data.ref }))
+  allPosts: allPosts.map(p => ({ slug: p.slug, title: p.data.title, ref: p.data.ref })),
+  // Add share data
+  location: location || 'Los Angeles',
+  description: shareDescription,
+  imageUrl: image
 };
 ---
 
@@ -39,7 +59,7 @@ const navData = {
     
     <!-- Hero Image Section -->
     <div class="hero-section">
-      <img id="hero-image" src={image} alt={title} class="hero-image" />
+      <img id="hero-image" src={image} alt={`${title} in ${location || 'Los Angeles'} - LAonFilm ${Array.isArray(ref) ? ref[0] : ref || 'photography'}`} class="hero-image" />
     </div>
     
     <!-- Additional Images Gallery -->
@@ -93,7 +113,7 @@ const navData = {
         </div>
 
         {post.data.website && (
-          <div class="catalog-row">
+          <div class="catalog-row catalog-website">
             <span class="catalog-label">WEB:</span>
             <span class="catalog-value">
               <a href={post.data.website} target="_blank">{post.data.website.replace(/^https?:\/\//, '').replace(/^www\./, '')}</a>
@@ -106,22 +126,22 @@ const navData = {
       <div class="share-box">
         <h3 class="box-title">SHARE</h3>
         <div class="share-stamps-grid">
-          <div class="stamp instagram small stamp-1" onclick="shareToInstagram()">
+          <div class="stamp instagram small stamp-1" onclick="window.shareToInstagram()">
             <span class="stamp-text">INSTAGRAM</span>
           </div>
-          <div class="stamp tiktok large stamp-2" onclick="shareToTikTok()">
+          <div class="stamp tiktok large stamp-2" onclick="window.shareToTikTok()">
             <span class="stamp-text">TIKTOK</span>
           </div>
-          <div class="stamp youtube medium stamp-3" onclick="shareToYouTube()">
+          <div class="stamp youtube medium stamp-3" onclick="window.shareToYouTube()">
             <span class="stamp-text">YOUTUBE</span>
           </div>
-          <div class="stamp twitter small stamp-4" onclick="shareToTwitter()">
+          <div class="stamp twitter small stamp-4" onclick="window.shareToTwitter()">
             <span class="stamp-text-large">X</span>
           </div>
-          <div class="stamp reddit medium stamp-5" onclick="shareToReddit()">
+          <div class="stamp reddit medium stamp-5" onclick="window.shareToReddit()">
             <span class="stamp-text">REDDIT</span>
           </div>
-          <div class="stamp email small stamp-6" onclick="shareViaEmail()">
+          <div class="stamp email small stamp-6" onclick="window.shareViaEmail()">
             <span class="stamp-text">EMAIL</span>
           </div>
         </div>
@@ -164,6 +184,7 @@ const navData = {
 
   /* Hero Image */
   .hero-section {
+    margin-top: 2rem;
     margin-bottom: 1.5rem;
     display: flex;
     justify-content: center;
@@ -302,8 +323,10 @@ const navData = {
   flex: 1;
   font-size: 1rem;
   line-height: 1.4;
-  word-break: break-all; /* Force long URLs to break */
-  overflow-wrap: break-word; /* Fallback for better browser support */
+  /* Default: wrap at word boundaries for all text */
+  word-break: normal;
+  overflow-wrap: break-word;
+  hyphens: auto; /* Allow hyphenation for long words */
 }
 
 .catalog-value a {
@@ -313,14 +336,23 @@ const navData = {
   color: var(--accent) !important;
   font-weight: 600;
   transition: none !important;
-  word-break: break-all; /* Break long URLs */
+  /* Default link behavior - wrap at words */
+  word-break: normal;
   overflow-wrap: break-word;
 }
 
-  .catalog-value a:hover {
-    color: var(--accent) !important;
-    text-decoration: underline !important;
-  }
+.catalog-value a:hover {
+  color: var(--accent) !important;
+  text-decoration: underline !important;
+}
+
+/* Special case: Force URL breaking only for website links */
+.catalog-website .catalog-value,
+.catalog-website .catalog-value a {
+  word-break: break-all !important;
+  overflow-wrap: break-word !important;
+  hyphens: none; /* Disable hyphenation for URLs */
+}
 
   .catalog-location {
     flex: 1;
@@ -478,7 +510,7 @@ const navData = {
 
 /* Post Navigation */
 .post-navigation {
-  margin: 3rem 0 2rem 0;
+  margin: 3rem 0 0.5rem 0;
   font-family: "Special Elite", monospace;
 }
 
@@ -488,17 +520,23 @@ const navData = {
 }
 
 .back-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: inline-block;
   color: var(--accent) !important;
   text-decoration: none !important;
   font-size: 1rem;
-  padding: 0.75rem 1rem; /* Increased top/bottom padding */
   border: 2px solid var(--accent);
   border-radius: 4px;
   transition: background 0.2s ease;
-  min-height: 44px; /* Ensure consistent button height */
+  font-family: "Special Elite", monospace;
+  
+  /* Balanced padding - slightly more top than bottom */
+  padding: 0.95rem 1rem 0.75rem 1rem;
+  
+  /* Reset everything that could interfere */
+  line-height: 1 !important;
+  vertical-align: baseline !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
 }
 
 .back-link:hover {
@@ -528,7 +566,7 @@ const navData = {
 .nav-post {
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Center content vertically */
+  justify-content: center;
   color: var(--text) !important;
   text-decoration: none !important;
   padding: 1rem;
@@ -558,10 +596,14 @@ const navData = {
   line-height: 1.3;
 }
 
-/* Mobile adjustments - OVERRIDE the existing mobile styles */
+/* Mobile adjustments */
 @media (max-width: 768px) {
   .post-container {
     padding: 0.5rem;
+  }
+
+  .hero-section {
+    margin-top: 1.5rem;
   }
 
   .hero-image {
@@ -587,9 +629,8 @@ const navData = {
     min-width: 0;
   }
 
-  /* Navigation stays side-by-side on mobile */
   .nav-posts {
-    flex-direction: row !important; /* Force row layout */
+    flex-direction: row !important;
     justify-content: space-between;
     gap: 0.5rem;
   }
@@ -667,52 +708,63 @@ const navData = {
 
 </style>
 
-<script define:vars={{ navData }}>
-  function swapHeroImage(newSrc) {
+<script>
+  // Make functions globally accessible
+  window.swapHeroImage = function(newSrc) {
     document.getElementById('hero-image').src = newSrc;
   }
 
-  function playVideo(videoSrc) {
+  window.playVideo = function(videoSrc) {
     console.log('Playing video:', videoSrc);
   }
 
-  function shareToInstagram() {
-    const shareText = `${document.title} - Captured on Instax Square with Hasselblad 500CM • LAonFilm.com - A love letter to Los Angeles, written on instant film.`;
-    navigator.clipboard.writeText(`${shareText}\n\n${window.location.href}`);
-    alert('Caption and link copied! Paste into your Instagram post or story.');
+  window.shareToInstagram = function() {
+    console.log('Instagram share clicked');
+    const cleanTitle = document.title.replace(/\s*·\s*LAonFilm.*$/, '');
+    const shareText = `${cleanTitle}\n${navData.location || 'Los Angeles'}\n\n${navData.description}\n\nShot on a @hasselblad #500cm with a HassyPB (@hassypb_john_hasselblad) back.\n\nSee more at @LAonFilm_ or LAonFilm.com\n\nImage: ${window.location.origin}${navData.imageUrl}\nPost: ${window.location.href}`;
+    navigator.clipboard.writeText(shareText);
+    alert('Caption and image URL copied! Save the image from the link above, then paste this caption into your Instagram post or story.');
   }
 
-  function shareToTikTok() {
+  window.shareToTikTok = function() {
+    console.log('TikTok share clicked');
     const url = encodeURIComponent(window.location.href);
     const text = encodeURIComponent(`${document.title} - LAonFilm • Shot on vintage Hasselblad with Instax Square film`);
     window.open(`https://www.tiktok.com/share?url=${url}&title=${text}`, '_blank');
   }
 
-  function shareToYouTube() {
-    const shareText = `Check out this LA spot: ${document.title}\n\nShot on vintage Hasselblad 500CM with Instax Square film\nLAonFilm.com - A love letter to Los Angeles, written on instant film.\n\n${window.location.href}`;
+  window.shareToYouTube = function() {
+    console.log('YouTube share clicked');
+    const cleanTitle = document.title.replace(/\s*·\s*LAonFilm.*$/, '');
+    const shareText = `${cleanTitle} in ${navData.location || 'Los Angeles'}\n\n${navData.description}\n\nShot on a Hasselblad 500CM with a HassyPB back.\n\nSee more at @LAonFilm or LAonFilm.com\n\n${window.location.href}`;
     navigator.clipboard.writeText(shareText);
     alert('Share text copied! Perfect for YouTube community posts or video descriptions.');
   }
 
-  function shareToTwitter() {
+  window.shareToTwitter = function() {
+    console.log('Twitter share clicked');
     const url = encodeURIComponent(window.location.href);
     const text = encodeURIComponent(`${document.title} - captured on Instax Square film 📸 LAonFilm.com`);
     window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
   }
 
-  function shareToReddit() {
+  window.shareToReddit = function() {
+    console.log('Reddit share clicked');
     const url = encodeURIComponent(window.location.href);
     const text = encodeURIComponent(`${document.title} - Shot on vintage Hasselblad with Instax Square [LAonFilm]`);
     window.open(`https://reddit.com/submit?url=${url}&title=${text}`, '_blank');
   }
 
-  function shareViaEmail() {
-    const subject = encodeURIComponent(`${document.title} - LAonFilm`);
-    const body = encodeURIComponent(`I thought you'd enjoy this LA spot I found:\n\n${document.title}\n\nShot on vintage Hasselblad 500CM with Instax Square instant film.\n\nCheck it out: ${window.location.href}\n\nFrom LAonFilm.com - A love letter to Los Angeles, written on instant film.`);
+  window.shareViaEmail = function() {
+    console.log('Email share clicked');
+    const cleanTitle = document.title.replace(/\s*·\s*LAonFilm.*$/, '');
+    const subject = encodeURIComponent(`${cleanTitle} - LAonFilm.com`);
+    const body = encodeURIComponent(`I thought you'd enjoy this LA spot I found:\n\n${cleanTitle}\n\nCheck it out: ${window.location.href}\n\nFrom LAonFilm.com - A love letter to Los Angeles, written on instant film.`);
     window.location.href = `mailto:?subject=${subject}&body=${body}`;
   }
+</script>
 
-  // Navigation logic - runs client-side
+<script define:vars={{ navData }}>
   document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const fromRef = urlParams.get('from');
