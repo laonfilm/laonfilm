@@ -127,7 +127,7 @@ const navData = {
         <h3 class="box-title">SHARE</h3>
         <div class="share-stamps-grid">
           <div class="stamp instagram small stamp-1" onclick="window.shareToInstagram()">
-            <span class="stamp-text">INSTAGRAM</span>
+            <span class="stamp-text">INSTA</span>
           </div>
           <div class="stamp tiktok large stamp-2" onclick="window.shareToTikTok()">
             <span class="stamp-text">TIKTOK</span>
@@ -259,32 +259,30 @@ const navData = {
     align-items: stretch;
   }
 
-  /* Info Box - Main content */
+  /* Info Box - Main content - now matches navigation button color */
   .info-box {
     flex: 3;
     background: var(--bg);
     padding: 1.5rem;
     font-family: "Special Elite", monospace;
-    border: 3px solid rgba(30,30,30,0.8);
+    border: 2px solid var(--text);
     border-radius: 3px 1px 2px 2px;
     display: flex;
     flex-direction: column;
-    box-shadow: inset 0 0 0 1px rgba(30,30,30,0.3);
-    filter: blur(0.3px);
+    box-shadow: inset 0 0 0 1px rgba(30,30,30,0.1);
   }
 
-  /* Share Box - Smaller companion */
+  /* Share Box - Smaller companion - now matches navigation button color */
   .share-box {
     flex: 2;
     background: var(--bg);
     padding: 1.5rem;
     font-family: "Special Elite", monospace;
-    border: 3px solid rgba(30,30,30,0.8);
+    border: 2px solid var(--text);
     border-radius: 2px 3px 1px 3px;
     display: flex;
     flex-direction: column;
-    box-shadow: inset 0 0 0 1px rgba(30,30,30,0.3);
-    filter: blur(0.3px);
+    box-shadow: inset 0 0 0 1px rgba(30,30,30,0.1);
   }
 
   .box-title {
