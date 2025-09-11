@@ -1,13 +1,10 @@
 // src/pages/rss.xml.js
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
-import { experimental_AstroContainer as AstroContainer } from 'astro/container';
-import { loadRenderers } from 'astro:ssr';
 import sanitizeHtml from 'sanitize-html';
 
 export async function GET(context) {
   const posts = await getCollection('posts');
-  const container = await AstroContainer.create();
   
   return rss({
     title: 'LAonFilm',
@@ -17,59 +14,29 @@ export async function GET(context) {
       posts
         .sort((a, b) => new Date(b.data.date) - new Date(a.data.date))
         .map(async (post) => {
-          // Render the post content to HTML with components processed
-          const { Content } = await post.render();
-          const renderedContent = await container.renderToString(Content);
+          // Get the raw content instead of trying to render components
+          const content = post.body || '';
           
           return {
             title: post.data.title,
             pubDate: new Date(post.data.date),
             description: `${post.data.title} - Shot on a vintage Hasselblad 500cm with Instax Square film`,
             link: `/${post.slug}/`,
-            // Use the fully rendered HTML content with components processed
-            content: sanitizeHtml(renderedContent, {
-              allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'video', 'figure', 'figcaption', 'source']),
+            // Use the raw markdown content, sanitized for RSS
+            content: sanitizeHtml(content, {
+              allowedTags: ['p', 'br', 'strong', 'em', 'a', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'blockquote'],
               allowedAttributes: {
-                ...sanitizeHtml.defaults.allowedAttributes,
-                img: ['src', 'alt', 'title', 'width', 'height', 'loading'],
-                video: ['src', 'controls', 'width', 'height', 'autoplay', 'loop', 'muted', 'poster'],
-                source: ['src', 'type'],
-                a: ['href', 'title', 'target', 'rel'],
-                figure: ['class'],
-                figcaption: ['class']
+                a: ['href', 'title', 'target', 'rel']
               },
               allowedSchemes: ['http', 'https', 'mailto'],
               transformTags: {
-                // Ensure images have absolute URLs for email
-                'img': function(tagName, attribs) {
-                  if (attribs.src && !attribs.src.startsWith('http')) {
-                    attribs.src = `${context.site}${attribs.src.startsWith('/') ? '' : '/'}${attribs.src}`;
+                // Convert relative links to absolute
+                'a': function(tagName, attribs) {
+                  if (attribs.href && !attribs.href.startsWith('http') && !attribs.href.startsWith('mailto:')) {
+                    attribs.href = `${context.site}${attribs.href.startsWith('/') ? '' : '/'}${attribs.href}`;
                   }
                   return {
-                    tagName: 'img',
-                    attribs: attribs
-                  };
-                },
-                // Ensure videos have absolute URLs for email
-                'video': function(tagName, attribs) {
-                  if (attribs.src && !attribs.src.startsWith('http')) {
-                    attribs.src = `${context.site}${attribs.src.startsWith('/') ? '' : '/'}${attribs.src}`;
-                  }
-                  if (attribs.poster && !attribs.poster.startsWith('http')) {
-                    attribs.poster = `${context.site}${attribs.poster.startsWith('/') ? '' : '/'}${attribs.poster}`;
-                  }
-                  return {
-                    tagName: 'video',
-                    attribs: attribs
-                  };
-                },
-                // Handle video source tags
-                'source': function(tagName, attribs) {
-                  if (attribs.src && !attribs.src.startsWith('http')) {
-                    attribs.src = `${context.site}${attribs.src.startsWith('/') ? '' : '/'}${attribs.src}`;
-                  }
-                  return {
-                    tagName: 'source',
+                    tagName: 'a',
                     attribs: attribs
                   };
                 }
