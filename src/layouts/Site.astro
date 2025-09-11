@@ -25,6 +25,14 @@ const { title } = Astro.props;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
 
+<meta name="description" content="A love letter to Los Angeles, written on instant film with a vintage Hasselblad 500cm camera" />
+<meta name="keywords" content="Los Angeles photography, instant film, Hasselblad, LA locations, analog photography" />
+<meta property="og:title" content={title && title !== "LAonFilm" ? `${title} · LAonFilm` : "LAonFilm"} />
+<meta property="og:description" content="Documenting LA's historical, kitschy, fun, and beautiful places on Instax Square film" />
+<meta property="og:image" content="https://laonfilm.com/laonfilm-icon-512.png" />
+<meta property="og:url" content="https://laonfilm.com" />
+<meta name="twitter:card" content="summary_large_image" />
+
 <link rel="manifest" href="/site.webmanifest" />
   </head>
   <body>
