@@ -15,19 +15,24 @@ const siteTitle = "LAonFilm";
   fetchpriority="high"
   width="40"
   height="40"
+  style="width: 40px; height: 40px; display: block;"
 />
         <span class="title">{siteTitle}</span>
       </a>
     </div>
 
     <!-- Right: hamburger (typewriter vibe) -->
-    <input id="menu-toggle" type="checkbox" class="menu-toggle" aria-hidden="true" />
+    <input 
+      id="menu-toggle" 
+      type="checkbox" 
+      class="menu-toggle" 
+      aria-hidden="true"
+      aria-controls="primary-links"
+    />
     <label
       for="menu-toggle"
       class="menu-btn"
       aria-label="Toggle menu"
-      aria-controls="primary-links"
-      aria-expanded="false"
     >&&&</label>
 
     <!-- Nav links -->
@@ -198,7 +203,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const btn    = document.querySelector(".menu-btn");
 
   const setExpanded = () => {
-    if (btn && toggle) btn.setAttribute("aria-expanded", toggle.checked ? "true" : "false");
+    if (btn && toggle) {
+      btn.setAttribute("aria-expanded", toggle.checked ? "true" : "false");
+    }
+    if (toggle) {
+      toggle.setAttribute("aria-expanded", toggle.checked ? "true" : "false");
+    }
   };
 
   const applyScrollLock = () => {
@@ -212,6 +222,9 @@ document.addEventListener("DOMContentLoaded", () => {
     setExpanded();
     applyScrollLock();
   };
+
+  // Initialize state
+  updateUI();
 
   toggle?.addEventListener("change", updateUI);
 

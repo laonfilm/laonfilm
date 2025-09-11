@@ -1,6 +1,5 @@
 ---
 import Site from "../layouts/Site.astro";
-import TypewriterTagline from "../components/TypewriterTagline.astro";
 import { getCollection } from "astro:content";
 
 const posts = (await getCollection("posts"))
@@ -8,8 +7,10 @@ const posts = (await getCollection("posts"))
 ---
 
 <Site title="LAonFilm">
-  <!-- Typewriter tagline between nav and content -->
-  <TypewriterTagline />
+  <!-- Static tagline between nav and content -->
+  <div class="tagline-container">
+    <div class="tagline-text">A love letter to Los Angeles, written on instant film.</div>
+  </div>
   
   <div class="grid">
     {posts.map((p, index) => (
@@ -31,6 +32,25 @@ const posts = (await getCollection("posts"))
 </Site>
 
 <style>
+  /* Tagline styling */
+  .tagline-container {
+    text-align: center;
+    font-family: "Special Elite", "Courier New", Courier, monospace;
+    font-size: 1.1rem;
+    color: var(--text);
+    opacity: 0.85;
+    letter-spacing: 0.5px;
+    margin: 1.5rem auto 2.5rem;
+    max-width: var(--container);
+    padding: 0 2rem;
+    line-height: 1.4;
+  }
+
+  .tagline-text {
+    display: block;
+    width: 100%;
+  }
+
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -121,6 +141,12 @@ const posts = (await getCollection("posts"))
       grid-template-columns: repeat(2, 1fr);
       gap: var(--space-5);
     }
+    
+    .tagline-container {
+      font-size: 1rem;
+      margin: 1rem auto 2rem;
+      padding: 0 1.5rem;
+    }
   }
 
   /* Mobile adjustments */
@@ -128,6 +154,12 @@ const posts = (await getCollection("posts"))
     .grid {
       grid-template-columns: repeat(2, 1fr);
       gap: var(--space-4);
+    }
+    
+    .tagline-container {
+      font-size: 0.95rem;
+      margin: 0.75rem auto 1.5rem;
+      padding: 0 1rem;
     }
 
     /* Reduced translations on mobile for tighter spacing */
