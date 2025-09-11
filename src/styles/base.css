@@ -2,6 +2,16 @@
    LAonFilm base styles
    ========================= */
 
+/* Self-hosted Special Elite font */
+@font-face {
+  font-family: 'Special Elite';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/special-elite.woff2') format('woff2'),
+       url('/fonts/special-elite.ttf') format('truetype');
+}
+
 :root{
   /* Retro 70s palette from your style guide */
   --bg:     #EBD7A3;  /* background */
@@ -235,7 +245,7 @@ main a:hover {
   color: var(--text);
 }
 
-/* Footer About + Social links – override global link color */
+/* Footer About + Social links â€" override global link color */
 .site-footer .footer-left a,
 .site-footer .footer-right a {
   text-decoration: none;
