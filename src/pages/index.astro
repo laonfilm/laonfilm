@@ -19,7 +19,12 @@ const posts = (await getCollection("posts"))
         aria-label={p.data.title}
         title={p.data.title}
       >
-        <img src={p.data.image} alt={p.data.title} loading="lazy" />
+<img 
+  src={p.data.image} 
+  alt={p.data.title} 
+  fetchpriority={index < 4 ? "high" : undefined}
+  loading={index < 4 ? undefined : "lazy"}
+/>
       </a>
     ))}
   </div>
