@@ -1,0 +1,70 @@
+---
+// src/layouts/Site.astro
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/base.css"; // ✅ import from src/styles (bundled, hashed)
+const { title } = Astro.props;
+---
+<html lang="en">
+  <head>
+    <!-- Font preloading to reduce critical path latency -->
+    <link rel="preload" href="/fonts/special-elite.woff2" as="font" type="font/woff2" crossorigin>
+    
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title && title !== "LAonFilm" ? `${title} · LAonFilm` : "LAonFilm"}</title>
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/laonfilm-icon-48.png" />
+    <link rel="icon" type="image/png" sizes="64x64" href="/laonfilm-icon-64.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/laonfilm-icon-192.png" />
+    <link rel="icon" type="image/png" sizes="256x256" href="/laonfilm-icon-256.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/laonfilm-icon-512.png" />
+
+<meta name="description" content="A love letter to Los Angeles, written on instant film with a vintage Hasselblad 500cm camera" />
+<meta name="keywords" content="Los Angeles photography, instant film, Hasselblad, LA locations, analog photography" />
+<meta property="og:title" content={title && title !== "LAonFilm" ? `${title} · LAonFilm` : "LAonFilm"} />
+<meta property="og:description" content="Documenting LA's historical, kitschy, fun, and beautiful places on Instax Square film" />
+<meta property="og:image" content="https://laonfilm.com/laonfilm-icon-512.png" />
+<meta property="og:url" content="https://laonfilm.com" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="manifest" href="/site.webmanifest" />
+  </head>
+  <body>
+    <header class="site-header"><Nav /></header>
+    <main class="main-content">
+      <slot />
+    </main>
+    <Footer /> 
+
+    <!-- GoatCounter tracking - moved to end for better performance -->
+    <script data-goatcounter="https://laonfilm.goatcounter.com/count"
+            async src="//gc.zgo.at/count.js"></script>
+  </body>
+</html>
+
+<style>
+  .main-content {
+    max-width: var(--container);
+    margin: 0 auto;
+    /* Added consistent top padding to match index.astro and [slug].astro */
+    padding: 2rem 2rem var(--space-8) 2rem;
+  }
+
+  /* Tablet */
+  @media (max-width: 768px) {
+    .main-content {
+      padding: 1.5rem 1.5rem var(--space-8) 1.5rem;
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: 480px) {
+    .main-content {
+      padding: 1rem 1rem var(--space-6) 1rem;
+    }
+  }
+</style>

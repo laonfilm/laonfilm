@@ -7,8 +7,207 @@ const { title } = Astro.props;
 ---
 <html lang="en">
   <head>
+    <!-- DNS prefetch for analytics -->
+    <link rel="dns-prefetch" href="//gc.zgo.at">
+    
     <!-- Font preloading to reduce critical path latency -->
     <link rel="preload" href="/fonts/special-elite.woff2" as="font" type="font/woff2" crossorigin>
+    
+    <!-- Critical CSS inlined to prevent render blocking -->
+    <style>
+      /* Critical styles only - navigation, layout, typography basics */
+      :root{
+        --bg: #EBD7A3;
+        --text: #2A2A2A;
+        --head: #6B4226;
+        --link: #B7410E;
+        --link-h: #CC5500;
+        --accent: #B7410E;
+        --accent-2: #556B2F;
+        --container: 1120px;
+        --space-1: .25rem;
+        --space-2: .5rem;
+        --space-3: .75rem;
+        --space-4: 1rem;
+        --space-6: 1.5rem;
+        --space-8: 2rem;
+        --radius: 6px;
+      }
+      
+      * { box-sizing: border-box; }
+      
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      
+      body{
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Special Elite", "Courier New", Courier, monospace;
+        line-height: 1.5;
+        font-size: 17px;
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        min-height: 100svh;
+        overflow-x: hidden;
+      }
+      
+      /* Navigation critical styles */
+      .nav-wrapper {
+        position: relative;
+        background: var(--bg);
+      }
+      
+      .nav {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 1rem;
+        column-gap: 1rem;
+        max-width: var(--container);
+        margin: 0 auto;
+      }
+      
+      .nav-border {
+        width: 100%;
+        height: 2px;
+        background-image: 
+          linear-gradient(90deg, 
+            var(--text) 0px, var(--text) 4px, 
+            transparent 4px, transparent 10px,
+            var(--text) 10px, var(--text) 13px,
+            transparent 13px, transparent 18px,
+            var(--text) 18px, var(--text) 22px,
+            transparent 22px, transparent 27px,
+            var(--text) 27px, var(--text) 30px,
+            transparent 30px, transparent 36px
+          );
+        background-size: 36px 2px;
+        background-repeat: repeat-x;
+        opacity: 0.7;
+      }
+      
+      .brandline {
+        display: flex;
+        align-items: center;
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+      
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        text-decoration: none;
+        color: var(--text);
+        font-weight: 700;
+        font-size: 1.35rem;
+        letter-spacing: .5px;
+        white-space: nowrap;
+      }
+      
+      .logo {
+        height: 40px;
+        width: auto;
+        margin-right: 0.4rem;
+      }
+      
+      .links {
+        display: flex;
+        gap: 1rem;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        align-items: center;
+        flex-shrink: 0;
+      }
+      
+      .nav .links a {
+        text-decoration: none;
+        color: var(--text);
+        opacity: 0.85;
+        transition: color 0.2s ease, opacity 0.2s ease, text-decoration 0.2s ease;
+      }
+      
+      .nav .links a:hover {
+        color: var(--accent);
+        opacity: 1;
+        text-decoration: underline;
+      }
+      
+      /* Hide mobile menu elements on desktop */
+      .menu-toggle { display: none; }
+      .menu-btn { display: none; }
+      
+      /* Main content layout */
+      .main-content {
+        max-width: var(--container);
+        margin: 0 auto;
+        padding: 2rem 2rem var(--space-8) 2rem;
+      }
+      
+      /* Basic typography */
+      h1,h2,h3 {
+        color: var(--text);
+        margin: 0 0 var(--space-4);
+      }
+      
+      p { margin: 0 0 var(--space-4); }
+      
+      a {
+        color: var(--link);
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 2px;
+      }
+      
+      a:hover { color: var(--link-h); }
+      
+      /* Mobile critical styles */
+      @media (max-width: 720px) {
+        .logo { height: 36px; }
+        .menu-btn { 
+          display: inline-block;
+          font-family: "Special Elite","Courier New",Courier,monospace;
+          font-size: 1.25rem;
+          cursor: pointer;
+          user-select: none;
+          padding: .25rem .5rem;
+          line-height: 1;
+        }
+        
+        .links {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          height: auto;
+          background: var(--bg);
+          padding: 0.75rem 1rem 1.5rem;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: .6rem;
+          width: 100%;
+          z-index: 1000;
+          box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        }
+        
+        .menu-toggle:checked ~ .links { display: flex; }
+        
+        .main-content {
+          padding: 1.5rem 1.5rem var(--space-8) 1.5rem;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .main-content {
+          padding: 1rem 1rem var(--space-6) 1rem;
+        }
+      }
+    </style>
     
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -40,9 +239,27 @@ const { title } = Astro.props;
     </main>
     <Footer /> 
 
-    <!-- GoatCounter tracking - moved to end for better performance -->
-    <script data-goatcounter="https://laonfilm.goatcounter.com/count"
-            async src="//gc.zgo.at/count.js"></script>
+    <!-- Optimized GoatCounter - loads after user interaction -->
+    <script>
+      let analyticsLoaded = false;
+      function loadAnalytics() {
+        if (analyticsLoaded) return;
+        analyticsLoaded = true;
+        const script = document.createElement('script');
+        script.src = '//gc.zgo.at/count.js';
+        script.setAttribute('data-goatcounter', 'https://laonfilm.goatcounter.com/count');
+        script.async = true;
+        document.head.appendChild(script);
+      }
+      
+      // Load on first user interaction
+      ['click', 'scroll', 'keydown', 'touchstart'].forEach(event => {
+        document.addEventListener(event, loadAnalytics, { once: true, passive: true });
+      });
+      
+      // Fallback: load after 3 seconds if no interaction
+      setTimeout(loadAnalytics, 3000);
+    </script>
   </body>
 </html>
 

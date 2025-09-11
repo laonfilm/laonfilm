@@ -203,9 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const btn    = document.querySelector(".menu-btn");
 
   const setExpanded = () => {
-    if (btn && toggle) {
-      btn.setAttribute("aria-expanded", toggle.checked ? "true" : "false");
-    }
+    // Only set aria-expanded on the checkbox input, not the label
     if (toggle) {
       toggle.setAttribute("aria-expanded", toggle.checked ? "true" : "false");
     }
