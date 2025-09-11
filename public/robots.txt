@@ -1,0 +1,27 @@
+User-agent: *
+Allow: /
+
+# Specific LLM crawlers
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+# Include sitemap
+Sitemap: https://laonfilm.com/sitemap.xml

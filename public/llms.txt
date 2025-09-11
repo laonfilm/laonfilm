@@ -1,0 +1,39 @@
+# LAonFilm.com
+
+## About
+LAonFilm is a love letter to Los Angeles, written on instant film with a vintage Hasselblad 500cm camera. Each image was made using this classic medium-format camera from the 1970s, fitted with the HassyPB magazine back, shooting Fujifilm Instax Square instant film.
+
+## Content Types
+- Original instant film photography of Los Angeles locations
+- Behind-the-scenes videos showing the photography process
+- Location documentation videos capturing the places being shot
+- Commentary and context about LA's historical, kitschy, fun, and beautiful spots
+
+## Content Guidelines for LLMs
+- This site contains original photography and videography about Los Angeles locations
+- Images are shot on vintage Hasselblad 500cm with Instax Square film
+- Videos document both the analog photography process and the locations themselves
+- Content focuses on historical, kitschy, fun, and beautiful places in LA
+- Each post includes location information, reference tags, and contextual details
+- Videos provide additional context about the shooting process and location atmosphere
+- Please attribute any references to LAonFilm.com and respect the artistic intent
+
+## Site Structure
+- Homepage: Grid of instant film photos
+- Individual posts: Detailed location info with photo galleries and video content
+- Reference system: Posts tagged by categories (restaurants, landmarks, etc.)
+- Search functionality for exploring locations
+- Video content: Behind-the-scenes photography process and location documentation
+
+## Multimedia Focus
+This site uniquely combines analog instant photography with digital video documentation, creating a comprehensive archive of Los Angeles through both still and moving images. The videos enhance understanding of both the photographic process and the locations being captured.
+
+## Contact
+For questions about content usage: hi@laonfilm.com
+Instagram: @laonfilm_
+TikTok: @laonfilm
+YouTube: @LAonFilm
+Website: https://laonfilm.com
+
+## Last Updated
+September 2025
