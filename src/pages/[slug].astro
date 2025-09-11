@@ -707,7 +707,7 @@ const navData = {
 </style>
 
 <script>
-  // Make functions globally accessible
+  // Functions that don't need navData - keep in first script block
   window.swapHeroImage = function(newSrc) {
     document.getElementById('hero-image').src = newSrc;
   }
@@ -716,27 +716,11 @@ const navData = {
     console.log('Playing video:', videoSrc);
   }
 
-  window.shareToInstagram = function() {
-    console.log('Instagram share clicked');
-    const cleanTitle = document.title.replace(/\s*·\s*LAonFilm.*$/, '');
-    const shareText = `${cleanTitle}\n${navData.location || 'Los Angeles'}\n\n${navData.description}\n\nShot on a @hasselblad #500cm with a HassyPB (@hassypb_john_hasselblad) back.\n\nSee more at @LAonFilm_ or LAonFilm.com\n\nImage: ${window.location.origin}${navData.imageUrl}\nPost: ${window.location.href}`;
-    navigator.clipboard.writeText(shareText);
-    alert('Caption and image URL copied! Save the image from the link above, then paste this caption into your Instagram post or story.');
-  }
-
   window.shareToTikTok = function() {
     console.log('TikTok share clicked');
     const url = encodeURIComponent(window.location.href);
     const text = encodeURIComponent(`${document.title} - LAonFilm • Shot on vintage Hasselblad with Instax Square film`);
     window.open(`https://www.tiktok.com/share?url=${url}&title=${text}`, '_blank');
-  }
-
-  window.shareToYouTube = function() {
-    console.log('YouTube share clicked');
-    const cleanTitle = document.title.replace(/\s*·\s*LAonFilm.*$/, '');
-    const shareText = `${cleanTitle} in ${navData.location || 'Los Angeles'}\n\n${navData.description}\n\nShot on a Hasselblad 500CM with a HassyPB back.\n\nSee more at @LAonFilm or LAonFilm.com\n\n${window.location.href}`;
-    navigator.clipboard.writeText(shareText);
-    alert('Share text copied! Perfect for YouTube community posts or video descriptions.');
   }
 
   window.shareToTwitter = function() {
@@ -763,6 +747,23 @@ const navData = {
 </script>
 
 <script define:vars={{ navData }}>
+  // Functions that need navData - moved to second script block
+  window.shareToInstagram = function() {
+    console.log('Instagram share clicked');
+    const cleanTitle = document.title.replace(/\s*·\s*LAonFilm.*$/, '');
+    const shareText = `${cleanTitle}\n${navData.location || 'Los Angeles'}\n\n${navData.description}\n\nShot on a @hasselblad #500cm with a HassyPB (@hassypb_john_hasselblad) back.\n\nSee more at @LAonFilm_ or LAonFilm.com\n\nImage: ${window.location.origin}${navData.imageUrl}\nPost: ${window.location.href}`;
+    navigator.clipboard.writeText(shareText);
+    alert('Caption and image URL copied! Save the image from the link above, then paste this caption into your Instagram post or story.');
+  }
+
+  window.shareToYouTube = function() {
+    console.log('YouTube share clicked');
+    const cleanTitle = document.title.replace(/\s*·\s*LAonFilm.*$/, '');
+    const shareText = `${cleanTitle} in ${navData.location || 'Los Angeles'}\n\n${navData.description}\n\nShot on a Hasselblad 500CM with a HassyPB back.\n\nSee more at @LAonFilm or LAonFilm.com\n\n${window.location.href}`;
+    navigator.clipboard.writeText(shareText);
+    alert('Share text copied! Perfect for YouTube community posts or video descriptions.');
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const fromRef = urlParams.get('from');
@@ -809,4 +810,4 @@ const navData = {
       nextPost.style.display = 'flex';
     }
   });
-</script>
+</script>/script>

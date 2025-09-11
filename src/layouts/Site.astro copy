@@ -34,16 +34,6 @@ const { title } = Astro.props;
         --radius: 6px;
       }
       
-      /* Self-hosted Special Elite font - critical for text rendering */
-      @font-face {
-        font-family: 'Special Elite';
-        font-style: normal;
-        font-weight: 400;
-        font-display: swap;
-        src: url('/fonts/special-elite.woff2') format('woff2'),
-             url('/fonts/special-elite.ttf') format('truetype');
-      }
-      
       * { box-sizing: border-box; }
       
       html, body {
@@ -62,31 +52,6 @@ const { title } = Astro.props;
         grid-template-rows: auto 1fr auto;
         min-height: 100svh;
         overflow-x: hidden;
-      }
-      
-      /* Typography basics */
-      h1,h2,h3 {
-        color: var(--text);
-        margin: 0 0 var(--space-4);
-      }
-      
-      p { margin: 0 0 var(--space-4); }
-      strong, b { color: var(--accent); font-weight: 700; }
-      
-      a {
-        color: var(--link);
-        text-decoration: underline;
-        text-decoration-thickness: 1px;
-        text-underline-offset: 2px;
-      }
-      
-      a:hover { color: var(--link-h); }
-      
-      /* Layout basics */
-      .site-header{
-        position: static;
-        top: 0;
-        background: var(--bg);
       }
       
       /* Navigation critical styles */
@@ -183,41 +148,24 @@ const { title } = Astro.props;
         padding: 2rem 2rem var(--space-8) 2rem;
       }
       
-      /* Basic grid for homepage */
-      .grid{
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(220px,1fr));
-        gap: var(--space-6);
+      /* Basic typography */
+      h1,h2,h3 {
+        color: var(--text);
+        margin: 0 0 var(--space-4);
       }
       
-      .card{
-        display: block;
-        text-decoration: none;
-        transition: transform .15s ease;
-        will-change: transform;
-        position: relative;
+      p { margin: 0 0 var(--space-4); }
+      
+      a {
+        color: var(--link);
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 2px;
       }
       
-      .card:focus-visible { 
-        outline: 2px dashed var(--link); 
-        outline-offset: 3px; 
-      }
-      
-      .card img{
-        width: 100%;
-        height: auto;
-        display: block;
-        filter: drop-shadow(0 2px 6px rgba(0,0,0,.15));
-      }
+      a:hover { color: var(--link-h); }
       
       /* Mobile critical styles */
-      @media (max-width: 768px) {
-        .grid {
-          grid-template-columns: repeat(2, 1fr);
-          gap: var(--space-5);
-        }
-      }
-      
       @media (max-width: 720px) {
         .logo { height: 36px; }
         .menu-btn { 
@@ -255,20 +203,11 @@ const { title } = Astro.props;
       }
       
       @media (max-width: 480px) {
-        .grid {
-          grid-template-columns: repeat(2, 1fr);
-          gap: var(--space-4);
-        }
-        
         .main-content {
           padding: 1rem 1rem var(--space-6) 1rem;
         }
       }
     </style>
-    
-    <!-- Load non-critical CSS asynchronously after critical render -->
-    <link rel="preload" href="/styles/base.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="/styles/base.css"></noscript>
     
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
