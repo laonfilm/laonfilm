@@ -1,3 +1,7 @@
+---
+import NewsletterPopup from './NewsletterPopup.astro';
+---
+
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-left">
@@ -10,10 +14,12 @@
       <a href="https://instagram.com/laonfilm_" target="_blank" rel="me noopener">[IG]</a>
       <a href="https://youtube.com/@laonfilm" target="_blank" rel="me noopener">[YT]</a>
       <a href="https://tiktok.com/@laonfilm" target="_blank" rel="me noopener">[TT]</a>
-      <a href="mailto:hi@laonfilm.com">[EMAIL]</a>
+      <button onclick="showNewsletterPopup()" class="email-link">[EMAIL]</button>
       <a href="/rss.xml">[RSS]</a>
     </div>
   </div>
+  
+  <NewsletterPopup />
 </footer>
 
 <style>
@@ -24,7 +30,6 @@
   margin-top: 3rem;
   position: relative;
 }
-
 /* Typewriter-style dashed rule at top */
 .site-footer::before {
   content: "";
@@ -47,7 +52,6 @@
   opacity: 0.7;
   pointer-events: none;
 }
-
 .footer-inner {
   display: flex;
   justify-content: space-between;
@@ -55,13 +59,11 @@
   flex-wrap: wrap;
   gap: 0.75rem;
 }
-
 .footer-left p {
   margin: 0;
   font-size: 0.9rem;
   color: var(--text);
 }
-
 /* Footer About + Social links — override global link color */
 .site-footer .footer-left a,
 .site-footer .footer-right a {
@@ -70,14 +72,29 @@
   opacity: 0.8;
   transition: color 0.2s ease, opacity 0.2s ease, text-decoration 0.2s ease;
 }
-
 .site-footer .footer-left a:hover,
 .site-footer .footer-right a:hover {
   color: var(--accent);    
   opacity: 1;
   text-decoration: underline;
 }
-
+/* Style the email button to match your links exactly */
+.email-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: var(--text);
+  opacity: 0.8;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease, opacity 0.2s ease, text-decoration 0.2s ease;
+}
+.email-link:hover {
+  color: var(--accent);
+  opacity: 1;
+  text-decoration: underline;
+}
 .footer-right {
   display: flex;
   gap: 0.75rem;            

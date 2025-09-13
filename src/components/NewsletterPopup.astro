@@ -1,0 +1,450 @@
+<div class="newsletter-popup" id="newsletter-popup">
+  <div class="index-card">
+    <div class="card-header">
+      <div class="card-number">NEWSLETTER SIGNUP #143</div>
+      <button onclick="closePopup()" class="close-drawer">×</button>
+    </div>
+    
+    <div class="card-lines">
+      <div class="line-group">
+        <label class="field-label">FIRST NAME:</label>
+        <input 
+          type="text" 
+          name="name" 
+          placeholder="Your first name" 
+          class="typewriter-input"
+        />
+      </div>
+      
+      <div class="line-group main-field">
+        <label class="field-label">EMAIL ADDRESS:</label>
+        <form id="newsletter-form" class="inline-form">
+          <input 
+            type="email" 
+            name="email" 
+            placeholder="your@email.com" 
+            required 
+            class="typewriter-input"
+          />
+          <button type="submit" class="stamp-button">FILE</button>
+        </form>
+      </div>
+      
+      <div class="line-group">
+        <label class="field-label">DATE FILED:</label>
+        <div class="typewriter-line">
+          <span class="auto-date"></span>
+        </div>
+      </div>
+      
+      <div class="line-group">
+        <label class="field-label">STATUS:</label>
+        <div class="typewriter-line">
+          <span id="status-text">PENDING</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card-footer">
+      <div class="library-stamp">LAonFILM ARCHIVES</div>
+    </div>
+    
+    <div id="message" class="card-message"></div>
+    
+    <!-- Bigger hole punch at bottom -->
+    <div class="hole-punch"></div>
+  </div>
+</div>
+
+<style>
+  .newsletter-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    font-family: "Special Elite", "Courier New", Courier, monospace;
+  }
+
+  .index-card {
+    background: #FFF8DC;
+    border: 2px solid #DDD;
+    padding: 32px;
+    position: relative;
+    max-width: 450px;
+    width: 90%;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    
+    /* Lined paper effect */
+    background-image: 
+      linear-gradient(to bottom, transparent 28px, #E6E6FA 28px, #E6E6FA 29px, transparent 29px),
+      linear-gradient(to bottom, transparent 56px, #E6E6FA 56px, #E6E6FA 57px, transparent 57px),
+      linear-gradient(to bottom, transparent 84px, #E6E6FA 84px, #E6E6FA 85px, transparent 85px),
+      linear-gradient(to bottom, transparent 112px, #E6E6FA 112px, #E6E6FA 113px, transparent 113px),
+      linear-gradient(to bottom, transparent 140px, #E6E6FA 140px, #E6E6FA 141px, transparent 141px),
+      linear-gradient(to bottom, transparent 168px, #E6E6FA 168px, #E6E6FA 169px, transparent 169px),
+      linear-gradient(to bottom, transparent 196px, #E6E6FA 196px, #E6E6FA 197px, transparent 197px);
+  }
+
+  .hole-punch {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 18px;
+    height: 18px;
+    background: #333;
+    border-radius: 50%;
+    box-shadow: 
+      inset 0 3px 6px rgba(0, 0, 0, 0.4),
+      0 0 6px rgba(0, 0, 0, 0.3);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #2F4F4F;
+  }
+
+  .card-number {
+    font-size: 0.7rem;
+    color: #2F4F4F;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+
+  .close-drawer {
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #2F4F4F;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 2px;
+    transition: background-color 0.2s ease;
+  }
+
+  .close-drawer:hover {
+    background: rgba(47, 79, 79, 0.1);
+  }
+
+  .line-group {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .main-field {
+    margin: 28px 0;
+    padding: 8px 0;
+    background: rgba(255, 255, 0, 0.05);
+    border-radius: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .field-label {
+    font-size: 0.75rem;
+    color: #2F4F4F;
+    font-weight: bold;
+    min-width: 120px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .typewriter-line {
+    flex: 1;
+    border-bottom: 1px solid #2F4F4F;
+    min-height: 20px;
+    padding: 2px 4px;
+    font-size: 0.9rem;
+    color: #2F4F4F;
+  }
+
+  .inline-form {
+    display: flex;
+    gap: 8px;
+    flex: 1;
+    align-items: center;
+  }
+
+  .typewriter-input {
+    background: none;
+    border: none;
+    border-bottom: 2px solid #2F4F4F;
+    font-family: "Special Elite", "Courier New", Courier, monospace;
+    font-size: 0.9rem;
+    color: #2F4F4F;
+    padding: 4px 2px;
+    flex: 1;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+
+  .typewriter-input:focus {
+    border-bottom-color: #8B4513;
+  }
+
+  .typewriter-input::placeholder {
+    color: #696969;
+    opacity: 0.7;
+  }
+
+  /* Make the standalone name input field work */
+  .line-group:first-of-type .typewriter-input {
+    width: 100%;
+  }
+
+  .stamp-button {
+    background: linear-gradient(135deg, #DC143C 0%, #B22222 100%);
+    color: #FFF8DC;
+    border: 2px solid #8B0000;
+    padding: 6px 12px;
+    font-family: "Special Elite", "Courier New", Courier, monospace;
+    font-size: 0.7rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border-radius: 2px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+    transform: rotate(-2deg);
+  }
+
+  .stamp-button:hover {
+    transform: rotate(0deg) scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  }
+
+  .stamp-button:active {
+    transform: scale(0.95);
+  }
+
+  .card-footer {
+    margin-top: 28px;
+    padding-top: 12px;
+    border-top: 1px dashed #2F4F4F;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .library-stamp {
+    font-size: 0.65rem;
+    color: #2F4F4F;
+    opacity: 0.7;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .auto-date {
+    font-size: 0.85rem;
+    color: #2F4F4F;
+  }
+
+  #status-text {
+    font-size: 0.85rem;
+    color: #2F4F4F;
+    font-weight: bold;
+  }
+
+  .card-message {
+    margin-top: 16px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    text-align: center;
+    display: none;
+    margin-bottom: 16px;
+  }
+
+  .card-message.success {
+    background: #D4EDDA;
+    color: #155724;
+    border: 1px solid #C3E6CB;
+  }
+
+  .card-message.error {
+    background: #F8D7DA;
+    color: #721C24;
+    border: 1px solid #F5C6CB;
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 480px) {
+    .index-card {
+      width: 95%;
+      padding: 20px;
+      margin: 16px;
+      max-width: none;
+    }
+    
+    .card-header {
+      margin-bottom: 20px;
+    }
+    
+    .card-number {
+      font-size: 0.65rem;
+    }
+    
+    .line-group {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+    
+    .field-label {
+      min-width: auto;
+      font-size: 0.7rem;
+    }
+    
+    .typewriter-line,
+    .inline-form,
+    .typewriter-input {
+      width: 100%;
+    }
+    
+    .typewriter-input {
+      font-size: 0.85rem;
+      padding: 6px 4px;
+    }
+    
+    .main-field {
+      margin: 16px 0;
+      padding: 12px 8px;
+    }
+    
+    .inline-form {
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .stamp-button {
+      width: 100%;
+      padding: 10px;
+      font-size: 0.75rem;
+      transform: rotate(0deg); /* Remove rotation on mobile for easier tapping */
+    }
+    
+    .stamp-button:hover {
+      transform: scale(1.02);
+    }
+    
+    .card-footer {
+      margin-top: 20px;
+      margin-bottom: 16px;
+    }
+    
+    .library-stamp {
+      font-size: 0.6rem;
+    }
+    
+    .hole-punch {
+      width: 16px;
+      height: 16px;
+      bottom: 12px;
+    }
+    
+    .card-message {
+      font-size: 0.75rem;
+      padding: 10px;
+    }
+  }
+
+  /* Extra small screens */
+  @media (max-width: 360px) {
+    .index-card {
+      padding: 16px;
+      width: 98%;
+    }
+    
+    .field-label {
+      font-size: 0.65rem;
+    }
+    
+    .typewriter-input {
+      font-size: 0.8rem;
+    }
+    
+    .stamp-button {
+      padding: 12px;
+    }
+  }
+</style>
+
+<script>
+  window.showNewsletterPopup = () => {
+    document.getElementById('newsletter-popup').style.display = 'flex';
+    // Set today's date
+    const today = new Date().toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    });
+    document.querySelector('.auto-date').textContent = today;
+  };
+  
+  window.closePopup = () => {
+    document.getElementById('newsletter-popup').style.display = 'none';
+    // Reset form and status
+    document.getElementById('newsletter-form').reset();
+    document.querySelectorAll('input[name="name"]')[0].value = '';
+    document.getElementById('message').style.display = 'none';
+    document.getElementById('status-text').textContent = 'PENDING';
+  };
+
+  document.getElementById('newsletter-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    
+    // Add the name field value to the form data
+    const nameInput = document.querySelector('input[name="name"]');
+    if (nameInput.value) {
+      formData.append('name', nameInput.value);
+    }
+    
+    const statusText = document.getElementById('status-text');
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    
+    // Update status to processing
+    statusText.textContent = 'PROCESSING...';
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'FILING...';
+    
+    try {
+      const response = await fetch('/api/newsletter', { method: 'POST', body: formData });
+      const result = await response.json();
+      
+      const message = document.getElementById('message');
+      message.textContent = result.message;
+      message.className = `card-message ${result.success ? 'success' : 'error'}`;
+      message.style.display = 'block';
+
+      if (result.success) {
+        statusText.textContent = 'FILED ✓';
+        setTimeout(() => closePopup(), 3000);
+      } else {
+        statusText.textContent = 'ERROR';
+      }
+    } catch (error) {
+      document.getElementById('message').textContent = 'Filing error occurred';
+      document.getElementById('message').className = 'card-message error';
+      document.getElementById('message').style.display = 'block';
+      statusText.textContent = 'ERROR';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'FILE';
+    }
+  });
+</script>
