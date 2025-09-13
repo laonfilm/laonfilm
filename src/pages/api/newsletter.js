@@ -1,6 +1,6 @@
 export const prerender = false;
 
-export async function POST({ request }) {
+export async function POST({ request, locals }) {
   try {
     const data = await request.formData();
     const email = data.get('email');
@@ -9,6 +9,20 @@ export async function POST({ request }) {
     if (!email) {
       return new Response(JSON.stringify({ success: false, message: 'Email required' }), { 
         status: 400,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Access environment variables through Cloudflare runtime
+    const apiKey = locals.runtime?.env?.SECRET_EMAILOCTOPUS_API_KEY || import.meta.env.SECRET_EMAILOCTOPUS_API_KEY;
+    
+    if (!apiKey) {
+      console.error('EmailOctopus API key not found');
+      return new Response(JSON.stringify({ 
+        success: false, 
+        message: 'Configuration error. Please try again.' 
+      }), { 
+        status: 500,
         headers: { 'Content-Type': 'application/json' }
       });
     }
@@ -29,7 +43,7 @@ export async function POST({ request }) {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${import.meta.env.SECRET_EMAILOCTOPUS_API_KEY}`
+        'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify(payload)
     });
@@ -85,6 +99,7 @@ export async function POST({ request }) {
       });
     }
   } catch (error) {
+    console.error('Newsletter signup error:', error);
     return new Response(JSON.stringify({ 
       success: false, 
       message: 'Something went wrong. Please try again.' 
