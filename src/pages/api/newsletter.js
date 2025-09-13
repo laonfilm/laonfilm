@@ -29,8 +29,7 @@ export async function POST({ request }) {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
-        'Authorization': `Bearer eo_e1efbf9c24765680c786b9f3feb45277ba43b37004e85f5a2fc31320410871d5`
-      },
+'Authorization': `Bearer ${import.meta.env.SECRET_EMAILOCTOPUS_API_KEY}`
       body: JSON.stringify(payload),
     });
 
