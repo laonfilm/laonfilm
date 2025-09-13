@@ -35,3 +35,75 @@
     #newsletter-form .line-group {
       width: 100%;
     }
+    
+    .typewriter-line,
+    .inline-form,
+    .typewriter-input {
+      width: 100%;
+    }
+    
+    .typewriter-input {
+      font-size: 0.95rem; /* Increased from 0.85rem */
+      padding: 6px 4px;
+    }
+    
+    .main-field {
+      margin: 16px 0;
+      padding: 12px 8px;
+    }
+    
+    .inline-form {
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .stamp-button {
+      width: 100%;
+      padding: 10px;
+      font-size: 0.75rem;
+      transform: rotate(0deg); /* Remove rotation on mobile for easier tapping */
+    }
+    
+    .stamp-button:hover {
+      transform: scale(1.02);
+    }
+    
+    .card-footer {
+      margin-top: 20px;
+      margin-bottom: 16px;
+    }
+    
+    .library-stamp {
+      font-size: 0.6rem;
+    }
+    
+    .hole-punch {
+      width: 16px;
+      height: 16px;
+      bottom: 12px;
+    }
+    
+    .card-message {
+      font-size: 0.75rem;
+      padding: 10px;
+    }
+  }
+
+  /* Extra small screens */
+  @media (max-width: 360px) {
+    .index-card {
+      padding: 16px;
+      width: 98%;
+    }
+    
+    .field-label {
+      font-size: 0.65rem;
+    }
+    
+    .typewriter-input {
+      font-size: 0.9rem; /* Increased from 0.8rem */
+    }
+    
+    .stamp-button {
+      padding: 12px;
+    }
