@@ -404,6 +404,25 @@
     document.getElementById('status-text').textContent = 'PENDING';
   };
 
+  // Close on outside click - more reliable version
+  document.addEventListener('click', (e) => {
+    const popup = document.getElementById('newsletter-popup');
+    const card = document.querySelector('.index-card');
+    
+    if (popup && popup.style.display === 'flex') {
+      if (e.target === popup || (!card.contains(e.target) && popup.contains(e.target))) {
+        closePopup();
+      }
+    }
+  });
+
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && document.getElementById('newsletter-popup').style.display === 'flex') {
+      closePopup();
+    }
+  });
+
   document.getElementById('newsletter-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);

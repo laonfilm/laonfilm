@@ -29,8 +29,9 @@ export async function POST({ request }) {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
-'Authorization': `Bearer ${import.meta.env.SECRET_EMAILOCTOPUS_API_KEY}`
-      body: JSON.stringify(payload),
+        'Authorization': `Bearer ${import.meta.env.SECRET_EMAILOCTOPUS_API_KEY}`
+      },
+      body: JSON.stringify(payload)
     });
 
     const result = await response.json();
