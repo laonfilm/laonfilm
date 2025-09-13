@@ -148,7 +148,6 @@
   .main-field {
     margin: 28px 0;
     padding: 8px 0;
-    background: rgba(255, 255, 0, 0.05);
     border-radius: 4px;
     padding-left: 8px;
     padding-right: 8px;
@@ -163,14 +162,15 @@
     letter-spacing: 0.5px;
   }
 
-  .typewriter-line {
-    flex: 1;
-    border-bottom: 1px solid #2F4F4F;
-    min-height: 20px;
-    padding: 2px 4px;
-    font-size: 0.9rem;
-    color: #2F4F4F;
-  }
+.typewriter-line {
+  flex: 1;
+  border-bottom: 1px solid #2F4F4F;
+  min-height: 20px;
+  padding: 2px 4px;
+  font-size: 0.9rem;
+  color: #2F4F4F;
+  border-radius: 0; /* Remove any border radius */
+}
 
   .inline-form {
     display: flex;
@@ -179,18 +179,19 @@
     align-items: center;
   }
 
-  .typewriter-input {
-    background: none;
-    border: none;
-    border-bottom: 2px solid #2F4F4F;
-    font-family: "Special Elite", "Courier New", Courier, monospace;
-    font-size: 0.9rem;
-    color: #2F4F4F;
-    padding: 4px 2px;
-    flex: 1;
-    outline: none;
-    transition: border-color 0.2s ease;
-  }
+.typewriter-input {
+  background: none;
+  border: none;
+  border-bottom: 2px solid #2F4F4F;
+  font-family: "Special Elite", "Courier New", Courier, monospace;
+  font-size: 0.9rem;
+  color: #2F4F4F;
+  padding: 4px 2px;
+  flex: 1;
+  outline: none;
+  transition: border-color 0.2s ease;
+  border-radius: 0; /* Remove any border radius */
+}
 
   .typewriter-input:focus {
     border-bottom-color: #8B4513;
