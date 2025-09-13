@@ -7,27 +7,29 @@ const posts = (await getCollection("posts"))
 ---
 
 <Site title="LAonFilm">
-  <!-- Static tagline between nav and content -->
-  <div class="tagline-container">
-    <div class="tagline-text">A love letter to Los Angeles, written on instant film.</div>
-  </div>
-  
-  <div class="grid">
-    {posts.map((p, index) => (
-      <a
-        class={`card card-${(index % 12) + 1}`}
-        href={`/${p.slug}`}
-        aria-label={p.data.title}
-        title={p.data.title}
-      >
-<img 
-  src={p.data.image} 
-  alt={p.data.title} 
-  fetchpriority={index < 4 ? "high" : undefined}
-  loading={index < 4 ? undefined : "lazy"}
-/>
-      </a>
-    ))}
+  <div class="homepage-content">
+    <!-- Static tagline between nav and content -->
+    <div class="tagline-container">
+      <div class="tagline-text">A love letter to Los Angeles, written on instant film.</div>
+    </div>
+    
+    <div class="grid">
+      {posts.map((p, index) => (
+        <a
+          class={`card card-${(index % 12) + 1}`}
+          href={`/${p.slug}`}
+          aria-label={p.data.title}
+          title={p.data.title}
+        >
+  <img 
+    src={p.data.image} 
+    alt={p.data.title} 
+    fetchpriority={index < 4 ? "high" : undefined}
+    loading={index < 4 ? undefined : "lazy"}
+  />
+        </a>
+      ))}
+    </div>
   </div>
 </Site>
 
@@ -35,6 +37,12 @@ const posts = (await getCollection("posts"))
   /* Override the main-content padding just for homepage */
   :global(.main-content) {
     padding-top: 0 !important;
+  }
+
+  .homepage-content {
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 0 2rem 1.5rem 2rem;
   }
 
   /* Tagline styling - centered between nav border and images */
@@ -52,7 +60,7 @@ const posts = (await getCollection("posts"))
     align-items: center;
     justify-content: center;
     height: 120px; /* Fixed height to create consistent spacing */
-    margin-bottom: 0;
+    margin-bottom: 0; /* Add some space before the grid */
   }
 
   .tagline-text {
@@ -145,6 +153,10 @@ const posts = (await getCollection("posts"))
 
   /* Tablet: force 2 columns to prevent overflow */
   @media (max-width: 768px) {
+    .homepage-content {
+      padding: 0 1.5rem var(--space-8) 1.5rem;
+    }
+
     .grid {
       grid-template-columns: repeat(2, 1fr);
       gap: var(--space-5);
@@ -158,6 +170,10 @@ const posts = (await getCollection("posts"))
 
   /* Mobile adjustments */
   @media (max-width: 480px) {
+    .homepage-content {
+      padding: 0 1rem var(--space-6) 1rem;
+    }
+
     .grid {
       grid-template-columns: repeat(2, 1fr);
       gap: var(--space-4);
