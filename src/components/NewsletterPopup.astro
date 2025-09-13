@@ -16,19 +16,21 @@
         />
       </div>
       
-      <div class="line-group main-field">
-        <label class="field-label">EMAIL ADDRESS:</label>
-        <form id="newsletter-form" class="inline-form">
-          <input 
-            type="email" 
-            name="email" 
-            placeholder="your@email.com" 
-            required 
-            class="typewriter-input"
-          />
-          <button type="submit" class="stamp-button">FILE</button>
-        </form>
-      </div>
+      <form id="newsletter-form">
+        <div class="line-group main-field">
+          <label class="field-label">EMAIL ADDRESS:</label>
+          <div class="inline-form">
+            <input 
+              type="email" 
+              name="email" 
+              placeholder="your@email.com" 
+              required 
+              class="typewriter-input"
+            />
+            <button type="submit" class="stamp-button">FILE</button>
+          </div>
+        </div>
+      </form>
       
       <div class="line-group">
         <label class="field-label">DATE FILED:</label>
@@ -149,7 +151,7 @@
     margin: 28px 0;
     padding: 8px 0;
     border-radius: 4px;
-    padding-left: 8px;
+    padding-left: 0; /* Remove left padding to align with other fields */
     padding-right: 8px;
   }
 
@@ -162,36 +164,42 @@
     letter-spacing: 0.5px;
   }
 
-.typewriter-line {
-  flex: 1;
-  border-bottom: 1px solid #2F4F4F;
-  min-height: 20px;
-  padding: 2px 4px;
-  font-size: 0.9rem;
-  color: #2F4F4F;
-  border-radius: 0; /* Remove any border radius */
-}
+  .typewriter-line {
+    flex: 1;
+    border-bottom: 2px solid #2F4F4F;
+    min-height: 20px;
+    padding: 2px 4px;
+    font-size: 0.9rem;
+    color: #2F4F4F;
+    border-radius: 0; /* Remove any border radius */
+  }
 
   .inline-form {
     display: flex;
     gap: 8px;
     flex: 1;
-    align-items: center;
+    align-items: baseline; /* Changed from center to baseline */
   }
 
-.typewriter-input {
-  background: none;
-  border: none;
-  border-bottom: 2px solid #2F4F4F;
-  font-family: "Special Elite", "Courier New", Courier, monospace;
-  font-size: 0.9rem;
-  color: #2F4F4F;
-  padding: 4px 2px;
-  flex: 1;
-  outline: none;
-  transition: border-color 0.2s ease;
-  border-radius: 0; /* Remove any border radius */
-}
+  #newsletter-form {
+    margin: 0;
+    padding: 0;
+  }
+
+  .typewriter-input {
+    background: none;
+    border: none;
+    border-bottom: 2px solid #2F4F4F;
+    font-family: "Special Elite", "Courier New", Courier, monospace;
+    font-size: 1rem; /* Increased from 0.9rem */
+    color: #2F4F4F;
+    padding: 4px 2px;
+    flex: 1;
+    outline: none;
+    transition: border-color 0.2s ease;
+    border-radius: 0; /* Remove any border radius */
+    line-height: 1.2; /* Add consistent line-height */
+  }
 
   .typewriter-input:focus {
     border-bottom-color: #8B4513;
@@ -205,6 +213,12 @@
   /* Make the standalone name input field work */
   .line-group:first-of-type .typewriter-input {
     width: 100%;
+  }
+
+  /* Ensure email input aligns with other inputs */
+  .inline-form .typewriter-input {
+    margin-left: 0;
+    padding-left: 2px; /* Match the padding of other typewriter-inputs */
   }
 
   .stamp-button {
@@ -221,6 +235,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     transition: all 0.2s ease;
     transform: rotate(-2deg);
+    align-self: baseline; /* Ensure button aligns to baseline */
   }
 
   .stamp-button:hover {
@@ -249,12 +264,12 @@
   }
 
   .auto-date {
-    font-size: 0.85rem;
+    font-size: 1rem; /* Increased from 0.85rem */
     color: #2F4F4F;
   }
 
   #status-text {
-    font-size: 0.85rem;
+    font-size: 1rem; /* Increased from 0.85rem */
     color: #2F4F4F;
     font-weight: bold;
   }
@@ -317,7 +332,7 @@
     }
     
     .typewriter-input {
-      font-size: 0.85rem;
+      font-size: 0.95rem; /* Increased from 0.85rem */
       padding: 6px 4px;
     }
     
@@ -375,7 +390,7 @@
     }
     
     .typewriter-input {
-      font-size: 0.8rem;
+      font-size: 0.9rem; /* Increased from 0.8rem */
     }
     
     .stamp-button {
