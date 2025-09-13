@@ -267,7 +267,6 @@ const { title } = Astro.props;
     </style>
     
     <!-- Load non-critical CSS asynchronously after critical render -->
-    <link rel="preload" href="/styles/base.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/styles/base.css"></noscript>
     
     <meta charset="utf-8" />
