@@ -4,22 +4,20 @@ import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://laonfilm.com',
-
-  // Use static output so Cloudflare Pages Functions are respected
   output: 'static',
+  adapter: cloudflare({ mode: 'directory' }),
 
-  // Cloudflare adapter in "directory" mode (so /functions/ is deployed)
-  adapter: cloudflare({
-    mode: 'directory'
-  }),
+  // Exclude /api/* from being prerendered by Astro
+  prerender: {
+    ignore: ['/api/*']
+  },
 
   integrations: [
     sitemap({
-      filter: (page) => {
-        return !page.includes('/api/') &&
-               !page.includes('/rss.xml') &&
-               !page.includes('/search');
-      }
+      filter: (page) =>
+        !page.includes('/api/') &&
+        !page.includes('/rss.xml') &&
+        !page.includes('/search')
     })
   ],
 
