@@ -2,7 +2,8 @@ backend:
   name: github
   repo: laonfilm/laonfilm
   branch: main
-  # You’ll add OAuth later; this is fine to start.
+  base_url: https://laonfilm.com   
+  auth_endpoint: api/gh-oauth/auth 
 
 # ONE images folder globally
 media_folder: "public/images"
