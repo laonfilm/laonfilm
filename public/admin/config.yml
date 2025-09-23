@@ -1,0 +1,74 @@
+backend:
+  name: github
+  repo: laonfilm/laonfilm
+  branch: main
+  # You’ll add OAuth later; this is fine to start.
+
+# ONE images folder globally
+media_folder: "public/images"
+public_folder: "/images"
+
+publish_mode: editorial_workflow
+site_url: "https://laonfilm.com"
+slug:
+  encoding: "unicode"
+  clean_accents: true
+  sanitize_replacement: "-"
+
+collections:
+  - name: "posts"
+    label: "Posts"
+    folder: "src/content/posts"
+    create: true
+    format: "frontmatter"
+    extension: "md"
+    slug: "{{slug}}"
+
+    # Per-post subfolders inside the SAME images folder:
+    media_folder: "public/images/posts/{{slug}}"
+    public_folder: "/images/posts/{{slug}}"
+
+    sortable_fields: ["date", "title"]
+
+    fields:
+      # Core
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime", format: "YYYY-MM-DD" }
+      - label: "Ref (Categories)"
+        name: "ref"
+        widget: "select"
+        multiple: true
+        options: ["Food","Drink","Culture","Views","Dispatches"]
+      - { label: "Location", name: "location", widget: "string", required: false }
+      - { label: "Website", name: "website", widget: "string", required: false }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false, required: false }
+
+      # Hero (optional). If empty, use gallery[0] in your template.
+      - { label: "Hero Image (optional)", name: "image", widget: "image", required: false, hint: "Leave blank to use first Gallery image" }
+
+      # Gallery (images only; first item can serve as hero)
+      - label: "Gallery"
+        name: "gallery"
+        widget: "list"
+        required: false
+        field:
+          label: "Image"
+          name: "item"
+          widget: "image"
+
+      # Videos (raw links: YouTube / TikTok / Instagram, etc.)
+      - label: "Videos"
+        name: "videos"
+        widget: "list"
+        required: false
+        field:
+          label: "Video URL"
+          name: "url"
+          widget: "string"
+          hint: "Paste full URL (https://…)"
+          pattern:
+            - "^(https?://)"
+            - "Must start with http(s)://"
+
+      # Body
+      - { label: "Body", name: "body", widget: "markdown" }
