@@ -34,7 +34,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
     if (window.opener) window.opener.postMessage(msg, "*");
     window.close();
   })();
-</script>`;
+</script>`.replace("${token}", token); // inject token safely
 
   return new Response(html, {
     headers: { "Content-Type": "text/html; charset=utf-8" },

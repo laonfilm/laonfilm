@@ -6,12 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
-    <!-- Load Decap CMS from your local copy -->
+    <!-- Load Decap CMS from your self-hosted copy -->
     <script src="./decap-cms.js"></script>
     <script>
-      // Explicit init so we don’t rely on auto-init timing
       window.CMS_MANUAL_INIT = true;
-      CMS.init({ configPath: "/admin/config.yml" });
+
+      // Wait for CMS to be defined
+      (function initCMS() {
+        if (typeof CMS !== "undefined") {
+          CMS.init({ configPath: "/admin/config.yml" });
+          console.log("✅ Decap CMS initialized.");
+        } else {
+          console.error("❌ Decap CMS failed to load. Check that decap-cms.js exists in /public/admin/");
+        }
+      })();
     </script>
   </body>
 </html>
