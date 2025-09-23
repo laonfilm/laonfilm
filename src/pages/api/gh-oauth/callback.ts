@@ -28,13 +28,15 @@ export const GET: APIRoute = async ({ request, locals }) => {
 <script>
   (function () {
     var msg = "authorization:github:success:" + JSON.stringify({
-      token: "${token}",
+      token: "__TOKEN__",
       provider: "github"
     });
+    console.log("DEBUG OAUTH MESSAGE:", msg);
+    alert("DEBUG OAUTH MESSAGE:\\n" + msg); // 👈 show in popup
     if (window.opener) window.opener.postMessage(msg, "*");
     window.close();
   })();
-</script>`.replace("${token}", token); // inject token safely
+</script>`.replace("__TOKEN__", token);
 
   return new Response(html, {
     headers: { "Content-Type": "text/html; charset=utf-8" },
