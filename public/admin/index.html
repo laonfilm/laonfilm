@@ -1,10 +1,20 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <title>LA on Film CMS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
     <script src="/admin/decap-cms.js"></script>
+    <script>
+      window.CMS_MANUAL_INIT = true;
+      if (typeof CMS !== "undefined") {
+        CMS.init({ configPath: "/admin/config.yml" });
+        console.log("✅ Decap CMS initialized");
+      } else {
+        console.error("❌ CMS not defined — decap-cms.js failed to load");
+      }
+    </script>
   </body>
 </html>
