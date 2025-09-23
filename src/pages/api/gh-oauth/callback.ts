@@ -24,12 +24,19 @@ export const GET: APIRoute = async ({ request, locals }) => {
 
   const token = data.access_token as string;
 
-  // Debug: show the message Decap would receive
-  return new Response(
-    `DEBUG MESSAGE:<br><pre>authorization:github:success:${JSON.stringify({
-      token,
-      provider: "github",
-    })}</pre>`,
-    { headers: { "Content-Type": "text/html; charset=utf-8" } }
-  );
+  const html = `<!doctype html><meta charset="utf-8">
+<script>
+  (function () {
+    var msg = "authorization:github:success:" + JSON.stringify({
+      token: "${token}",
+      provider: "github"
+    });
+    if (window.opener) window.opener.postMessage(msg, "*");
+    window.close();
+  })();
+</script>`;
+
+  return new Response(html, {
+    headers: { "Content-Type": "text/html; charset=utf-8" },
+  });
 };
