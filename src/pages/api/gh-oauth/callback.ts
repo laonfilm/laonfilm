@@ -1,6 +1,10 @@
-export const onRequestGet: PagesFunction = async (ctx) => {
-  const { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } = ctx.env as any;
-  const url = new URL(ctx.request.url);
+import type { APIRoute } from "astro";
+
+export const get: APIRoute = async ({ request }) => {
+  const clientId = import.meta.env.GITHUB_CLIENT_ID;
+  const clientSecret = import.meta.env.GITHUB_CLIENT_SECRET;
+
+  const url = new URL(request.url);
   const code = url.searchParams.get("code");
   if (!code) return new Response("Missing ?code", { status: 400 });
 
@@ -8,8 +12,8 @@ export const onRequestGet: PagesFunction = async (ctx) => {
     method: "POST",
     headers: { Accept: "application/json" },
     body: new URLSearchParams({
-      client_id: GITHUB_CLIENT_ID,
-      client_secret: GITHUB_CLIENT_SECRET,
+      client_id: clientId,
+      client_secret: clientSecret,
       code,
       redirect_uri: `${url.protocol}//${url.host}/api/gh-oauth/callback`,
     }),
@@ -19,7 +23,6 @@ export const onRequestGet: PagesFunction = async (ctx) => {
 
   const token = data.access_token as string;
 
-  // Send token back to Decap
   const html = `<!doctype html><meta charset="utf-8">
 <script>
   (function () {
@@ -28,5 +31,6 @@ export const onRequestGet: PagesFunction = async (ctx) => {
     window.close();
   })();
 </script>`;
+
   return new Response(html, { headers: { "Content-Type": "text/html; charset=utf-8" } });
 };
