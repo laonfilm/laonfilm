@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro";
 
-export const get: APIRoute = async ({ request, redirect, locals }) => {
+export const GET: APIRoute = async ({ request }) => {
   const clientId = import.meta.env.GITHUB_CLIENT_ID;
   const scope = import.meta.env.GITHUB_OAUTH_SCOPE || "public_repo";
 
