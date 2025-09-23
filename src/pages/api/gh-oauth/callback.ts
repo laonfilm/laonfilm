@@ -28,7 +28,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
 <script>
   (function () {
     var msg = "authorization:github:success:" + JSON.stringify({
-      token: "${token}",
+      token: "${token}", // ❌ wrong, stays literal
       provider: "github"
     });
     if (window.opener) window.opener.postMessage(msg, "*");
@@ -36,5 +36,10 @@ export const GET: APIRoute = async ({ request, locals }) => {
   })();
 </script>`;
 
-  return new Response(html, { headers: { "Content-Type": "text/html; charset=utf-8" } });
+  // FIX: use string concatenation so JS receives the actual token value
+  const fixedHtml = html.replace("${token}", token);
+
+  return new Response(fixedHtml, {
+    headers: { "Content-Type": "text/html; charset=utf-8" },
+  });
 };
