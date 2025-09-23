@@ -1,12 +1,17 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <title>Content Manager</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
-    <!-- Use jsDelivr instead of unpkg -->
-    <script src="https://cdn.jsdelivr.net/npm/decap-cms@3.2.2/dist/decap-cms.js"></script>
+    <!-- Load Decap CMS from your local copy -->
+    <script src="./decap-cms.js"></script>
+    <script>
+      // Explicit init so we don’t rely on auto-init timing
+      window.CMS_MANUAL_INIT = true;
+      CMS.init({ configPath: "/admin/config.yml" });
+    </script>
   </body>
 </html>
