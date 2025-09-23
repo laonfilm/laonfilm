@@ -1,8 +1,8 @@
 import type { APIRoute } from "astro";
 
 export const GET: APIRoute = async ({ request }) => {
-  const clientId = import.meta.env.GITHUB_CLIENT_ID;
-  const scope = import.meta.env.GITHUB_OAUTH_SCOPE || "public_repo";
+  const clientId = process.env.GITHUB_CLIENT_ID!;
+  const scope = process.env.GITHUB_OAUTH_SCOPE || "public_repo";
 
   const url = new URL(request.url);
   const base = `${url.protocol}//${url.host}`;
@@ -11,6 +11,7 @@ export const GET: APIRoute = async ({ request }) => {
   authorize.searchParams.set("client_id", clientId);
   authorize.searchParams.set("redirect_uri", `${base}/api/gh-oauth/callback`);
   authorize.searchParams.set("scope", scope);
+  authorize.searchParams.set("allow_signup", "true");
 
   return Response.redirect(authorize.toString(), 302);
 };

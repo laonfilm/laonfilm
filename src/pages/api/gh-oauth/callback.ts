@@ -1,8 +1,8 @@
 import type { APIRoute } from "astro";
 
 export const GET: APIRoute = async ({ request }) => {
-  const clientId = import.meta.env.GITHUB_CLIENT_ID;
-  const clientSecret = import.meta.env.GITHUB_CLIENT_SECRET;
+  const clientId = process.env.GITHUB_CLIENT_ID!;
+  const clientSecret = process.env.GITHUB_CLIENT_SECRET!;
 
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
@@ -18,6 +18,7 @@ export const GET: APIRoute = async ({ request }) => {
       redirect_uri: `${url.protocol}//${url.host}/api/gh-oauth/callback`,
     }),
   });
+
   const data = await tokenRes.json();
   if (!data.access_token) return new Response("OAuth failed", { status: 400 });
 
