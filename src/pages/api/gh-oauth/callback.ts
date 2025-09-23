@@ -27,7 +27,10 @@ export const GET: APIRoute = async ({ request, locals }) => {
   const html = `<!doctype html><meta charset="utf-8">
 <script>
   (function () {
-    var msg = "authorization:github:success:" + JSON.stringify({ token: "${token}" });
+    var msg = "authorization:github:success:" + JSON.stringify({
+      token: "${token}",
+      provider: "github"
+    });
     if (window.opener) window.opener.postMessage(msg, "*");
     window.close();
   })();
