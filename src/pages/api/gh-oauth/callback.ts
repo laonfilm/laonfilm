@@ -32,9 +32,10 @@ export const GET: APIRoute = async ({ request, locals }) => {
       provider: "github"
     });
     console.log("DEBUG OAUTH MESSAGE:", msg);
-    alert("DEBUG OAUTH MESSAGE:\\n" + msg); // 👈 show in popup
+    alert("DEBUG OAUTH MESSAGE:\\n" + msg); // 👈 force popup to stay until dismissed
     if (window.opener) window.opener.postMessage(msg, "*");
-    window.close();
+    // ⚠️ NOTE: we are NOT closing the window here during debugging
+    // window.close();
   })();
 </script>`.replace("__TOKEN__", token);
 
