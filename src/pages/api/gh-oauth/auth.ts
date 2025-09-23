@@ -1,8 +1,8 @@
 import type { APIRoute } from "astro";
 
-export const GET: APIRoute = async ({ request }) => {
-  const clientId = process.env.GITHUB_CLIENT_ID!;
-  const scope = process.env.GITHUB_OAUTH_SCOPE || "public_repo";
+export const GET: APIRoute = async ({ request, locals }) => {
+  const clientId = locals.runtime.env.GITHUB_CLIENT_ID;
+  const scope = locals.runtime.env.GITHUB_OAUTH_SCOPE || "public_repo";
 
   const url = new URL(request.url);
   const base = `${url.protocol}//${url.host}`;

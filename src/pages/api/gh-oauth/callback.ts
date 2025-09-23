@@ -1,8 +1,8 @@
 import type { APIRoute } from "astro";
 
-export const GET: APIRoute = async ({ request }) => {
-  const clientId = process.env.GITHUB_CLIENT_ID!;
-  const clientSecret = process.env.GITHUB_CLIENT_SECRET!;
+export const GET: APIRoute = async ({ request, locals }) => {
+  const clientId = locals.runtime.env.GITHUB_CLIENT_ID;
+  const clientSecret = locals.runtime.env.GITHUB_CLIENT_SECRET;
 
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
