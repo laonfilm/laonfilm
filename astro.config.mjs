@@ -5,7 +5,7 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://laonfilm.com',
   adapter: cloudflare(),
-  output: 'hybrid',
+  output: 'static',
 
   integrations: [
     sitemap({
