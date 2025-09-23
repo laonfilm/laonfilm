@@ -24,22 +24,12 @@ export const GET: APIRoute = async ({ request, locals }) => {
 
   const token = data.access_token as string;
 
-  const html = `<!doctype html><meta charset="utf-8">
-<script>
-  (function () {
-    var msg = "authorization:github:success:" + JSON.stringify({
-      token: "${token}", // ❌ wrong, stays literal
-      provider: "github"
-    });
-    if (window.opener) window.opener.postMessage(msg, "*");
-    window.close();
-  })();
-</script>`;
-
-  // FIX: use string concatenation so JS receives the actual token value
-  const fixedHtml = html.replace("${token}", token);
-
-  return new Response(fixedHtml, {
-    headers: { "Content-Type": "text/html; charset=utf-8" },
-  });
+  // Debug: show the message Decap would receive
+  return new Response(
+    `DEBUG MESSAGE:<br><pre>authorization:github:success:${JSON.stringify({
+      token,
+      provider: "github",
+    })}</pre>`,
+    { headers: { "Content-Type": "text/html; charset=utf-8" } }
+  );
 };
