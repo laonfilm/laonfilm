@@ -1,25 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>Content Manager</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LA on Film CMS</title>
   </head>
   <body>
-    <!-- Load Decap CMS from your self-hosted copy -->
-    <script src="./decap-cms.js"></script>
-    <script>
-      window.CMS_MANUAL_INIT = true;
-
-      // Wait for CMS to be defined
-      (function initCMS() {
-        if (typeof CMS !== "undefined") {
-          CMS.init({ configPath: "/admin/config.yml" });
-          console.log("✅ Decap CMS initialized.");
-        } else {
-          console.error("❌ Decap CMS failed to load. Check that decap-cms.js exists in /public/admin/");
-        }
-      })();
-    </script>
+    <script src="/admin/decap-cms.js"></script>
   </body>
 </html>
