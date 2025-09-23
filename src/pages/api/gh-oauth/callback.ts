@@ -1,8 +1,8 @@
 import type { APIRoute } from "astro";
 
-export const GET: APIRoute = async ({ request, locals }) => {
-  const clientId = locals.runtime.env.GITHUB_CLIENT_ID;
-  const clientSecret = locals.runtime.env.GITHUB_CLIENT_SECRET;
+export const GET: APIRoute = async ({ request }) => {
+  const clientId = import.meta.env.GITHUB_CLIENT_ID;
+  const clientSecret = import.meta.env.GITHUB_CLIENT_SECRET;
 
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
@@ -12,8 +12,8 @@ export const GET: APIRoute = async ({ request, locals }) => {
     method: "POST",
     headers: { Accept: "application/json" },
     body: new URLSearchParams({
-      client_id: clientId,
-      client_secret: clientSecret,
+      client_id: clientId!,
+      client_secret: clientSecret!,
       code,
       redirect_uri: `${url.protocol}//${url.host}/api/gh-oauth/callback`,
     }),
@@ -24,20 +24,22 @@ export const GET: APIRoute = async ({ request, locals }) => {
 
   const token = data.access_token as string;
 
+  // Normal Decap flow: post message to parent and close popup
   const html = `<!doctype html><meta charset="utf-8">
 <script>
   (function () {
     var msg = "authorization:github:success:" + JSON.stringify({
-      token: "__TOKEN__",
+      token: "${token}",
       provider: "github"
     });
-    console.log("DEBUG OAUTH MESSAGE:", msg);
-    alert("DEBUG OAUTH MESSAGE:\\n" + msg); // 👈 force popup to stay until dismissed
-    if (window.opener) window.opener.postMessage(msg, "*");
-    // ⚠️ NOTE: we are NOT closing the window here during debugging
-    // window.close();
+    if (window.opener) {
+      window.opener.postMessage(msg, "*");
+      window.close();
+    } else {
+      document.body.innerText = "Authentication succeeded. You can close this window.";
+    }
   })();
-</script>`.replace("__TOKEN__", token);
+</script>`;
 
   return new Response(html, {
     headers: { "Content-Type": "text/html; charset=utf-8" },
