@@ -4,20 +4,28 @@ import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://laonfilm.com',
-  output: 'hybrid',
-  adapter: cloudflare(),
+
+  // Force Cloudflare Pages Functions for API routes
+  output: 'server',
+  adapter: cloudflare({
+    mode: 'directory', // ensures /functions/ are deployed
+  }),
+
   integrations: [
     sitemap({
       filter: (page) => {
-        return !page.includes('/api/') && 
-               !page.includes('/rss.xml') &&
-               !page.includes('/search');
-      }
-    })
+        return (
+          !page.includes('/api/') &&
+          !page.includes('/rss.xml') &&
+          !page.includes('/search')
+        );
+      },
+    }),
   ],
+
   vite: {
     build: {
       assetsInlineLimit: 4096,
-    }
-  }
+    },
+  },
 });
