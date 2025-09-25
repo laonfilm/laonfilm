@@ -4,6 +4,10 @@ export const GET: APIRoute = async ({ request, locals }) => {
   const clientId = locals.runtime.env.GITHUB_CLIENT_ID;
   const scope = locals.runtime.env.GITHUB_OAUTH_SCOPE || "public_repo";
 
+  // Debug logs (these show up in Cloudflare Pages logs)
+  console.log("DEBUG AUTH: clientId =", clientId);
+  console.log("DEBUG AUTH: scope =", scope);
+
   if (!clientId) {
     return new Response("Missing GITHUB_CLIENT_ID in Cloudflare env.", { status: 500 });
   }
